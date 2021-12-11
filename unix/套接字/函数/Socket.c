@@ -6,8 +6,8 @@
 int main(int argc, char const *argv[])
 {
     /**
-     * family   AF_INET（IPv4协议）；AF_INET6（IPv6协议）；AF_LOCAL（UNIX域协议）；
-     *          AF_ROUTE（路由套接字协议）；AF_KEY（密钥套接字）
+     * family   PF_INET（IPv4协议）；PF_INET6（IPv6协议）；PF_LOCAL（UNIX域协议）；
+     *          PF_ROUTE（路由套接字协议）；PF_KEY（密钥套接字）
      * type     SOCK_STREAM（字节流套接字）；SOCKET_DGRAM（数据报套接字）；
      *          SOCK_SEQPACKET（有序分组套接字）；SOCK_RAW（原始套接字）
      * protocol IPPROTO_TCP（TCP协议）；IPPROTO_UDP（UDP协议）；IPPROTO_SCTP（SCTP协议）
