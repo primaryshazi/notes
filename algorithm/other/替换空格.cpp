@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 int ReplaceBlank(char str[], int maxLen, const char *replace)
 {
