@@ -17,45 +17,28 @@ ListNode *addTwoNumbers(ListNode *l1, ListNode *l2)
 
     while (l1 != nullptr || l2 != nullptr)
     {
-        int sum = 0;    // 总和
-        int value = 0;  // 位值
+        int x = l1 != nullptr ? l1->val : 0;
+        int y = l2 != nullptr ? l2->val : 0;
+        int sum = x + y + carry;
+        carry = sum / 10;
 
-        if (l1 == nullptr)
+        if (l1 != nullptr)
         {
-            sum = l2->val + carry;
-            l2 = l2->next;
-        }
-        else if (l2 == nullptr)
-        {
-            sum = l1->val + carry;
             l1 = l1->next;
         }
-        else
+        if (l2 != nullptr)
         {
-            sum = l1->val + l2->val + carry;
-            l1 = l1->next;
             l2 = l2->next;
-        }
-
-        if (sum > 9)
-        {
-            carry = sum / 10;
-            value = sum % 10;
-        }
-        else
-        {
-            carry = 0;
-            value = sum;
         }
 
         if (head == nullptr)
         {
-            head = new ListNode(value);
+            head = new ListNode(sum % 10);
             tail = head;
         }
         else
         {
-            tail->next = new ListNode(value);
+            tail->next = new ListNode(sum % 10);
             tail = tail->next;
         }
     }

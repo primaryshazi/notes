@@ -11,9 +11,12 @@ double findMedianSortedArrays(const std::vector<int> &nums1, const std::vector<i
     int x = 0;
     int y = 0;
 
+    // 遍历两个数组长度的一半
     for (int i = 0; i <= len / 2; i++)
     {
-        last = current;
+        last = current;     // 记录上一个值
+
+        // 当数组1未遍历完成且有不大于数组2的元素，则继续遍历数组1，否则遍历数组2
         if (x < m && (y >= n || nums1[x] < nums2[y]))
         {
             current = nums1[x++];
