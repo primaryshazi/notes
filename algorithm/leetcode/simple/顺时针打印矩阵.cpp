@@ -91,36 +91,43 @@ std::vector<int> spiralOrder(std::vector<std::vector<int>> &matrix)
 }
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
 {
-    std::vector<std::vector<int>> vec1 = {
+    std::vector<std::vector<int>> v1 = {
             {1, 2, 3, 4}
     };
-    std::vector<std::vector<int>> vec2 = {
+    std::vector<std::vector<int>> v2 = {
             {1, 2, 3, 4},
             {5, 6, 7, 8}
     };
-    std::vector<std::vector<int>> vec3 = {
+    std::vector<std::vector<int>> v3 = {
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12}
     };
-    std::vector<std::vector<int>> vec4 = {
+    std::vector<std::vector<int>> v4 = {
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
             {13, 14, 15 , 16}
     };
-    std::vector<std::vector<int>> vec5 = {
+    std::vector<std::vector<int>> v5 = {
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
@@ -129,17 +136,17 @@ int main()
     };
 
     /**
-     * => 1 2 3 4
-     * => 1 2 3 4 8 7 6 5
-     * => 1 2 3 4 8 12 11 10 9 5 6 7
-     * => 1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10
-     * => 1 2 3 4 8 12 16 20 19 18 17 13 9 5 6 7 11 15 14 10
+     * => { 1, 2, 3, 4 }
+     * => { 1, 2, 3, 4, 8, 7, 6, 5 }
+     * => { 1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7 }
+     * => { 1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10 }
+     * => { 1, 2, 3, 4, 8, 12, 16, 20, 19, 18, 17, 13, 9, 5, 6, 7, 11, 15, 14, 10 }
      */
-    print(spiralOrder(vec1));
-    print(spiralOrder(vec2));
-    print(spiralOrder(vec3));
-    print(spiralOrder(vec4));
-    print(spiralOrder(vec5));
+    std::cout << spiralOrder(v1) << std::endl;
+    std::cout << spiralOrder(v2) << std::endl;
+    std::cout << spiralOrder(v3) << std::endl;
+    std::cout << spiralOrder(v4) << std::endl;
+    std::cout << spiralOrder(v5) << std::endl;
 
     return 0;
 }

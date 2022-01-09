@@ -45,13 +45,20 @@ std::vector<std::vector<int>> threeSum(std::vector<int> &nums)
 }
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
@@ -65,38 +72,13 @@ int main()
     auto r3 = threeSum(vec3);
 
     /**
-     * => -3 0 3
-     * => -3 1 2
-     * => -2 -1 3
-     * => -2 0 2
-     * => -1 0 1
-     * =>
-     * => -3 0 3
-     * => -3 1 2
-     * => -2 -1 3
-     * => -2 0 2
-     * => -2 1 1
-     * => -1 -1 2
-     * => -1 0 1
-     * =>
-     * => -3 -2 5
-     * => -3 -1 4
-     * => -1 0 1
+     * => { { -3, 0, 3 }, { -3, 1, 2 }, { -2, -1, 3 }, { -2, 0, 2 }, { -1, 0, 1 } }
+     * => { { -3, 0, 3 }, { -3, 1, 2 }, { -2, -1, 3 }, { -2, 0, 2 }, { -2, 1, 1 }, { -1, -1, 2 }, { -1, 0, 1 } }
+     * => { { -3, -2, 5 }, { -3, -1, 4 }, { -1, 0, 1 } }
      */
-    for (auto v : r1)
-    {
-        print(v);
-    }
-    std::cout << std::endl;
-    for (auto v : r2)
-    {
-        print(v);
-    }
-    std::cout << std::endl;
-    for (auto v : r3)
-    {
-        print(v);
-    }
+    std::cout << r1 << std::endl;
+    std::cout << r2 << std::endl;
+    std::cout << r3 << std::endl;
 
     return 0;
 }

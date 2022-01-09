@@ -31,13 +31,20 @@ std::vector<int> plusOne(const std::vector<int> &digits)
 }
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
@@ -49,17 +56,17 @@ int main()
     std::vector<int> v5 = { 9, 9, 9, 9 };
 
     /**
-     * => 1 2 3 5
-     * => 1 2 4 0
-     * => 1 3 0 0
-     * => 2 0 0 0
-     * => 1 0 0 0
+     * => { 1, 2, 3, 5 }
+     * => { 1, 2, 4, 0 }
+     * => { 1, 3, 0, 0 }
+     * => { 2, 0, 0, 0 }
+     * => { 1, 0, 0, 0, 0 }
      */
-    print(plusOne(v1));
-    print(plusOne(v2));
-    print(plusOne(v3));
-    print(plusOne(v4));
-    print(plusOne(v5));
+    std::cout << plusOne(v1) << std::endl;
+    std::cout << plusOne(v2) << std::endl;
+    std::cout << plusOne(v3) << std::endl;
+    std::cout << plusOne(v4) << std::endl;
+    std::cout << plusOne(v5) << std::endl;
 
     return 0;
 }

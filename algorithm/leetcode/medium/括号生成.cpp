@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-void generateParenthesisCore(int left, int right, int n, std::string &str, std::vector<std::string> &result)
+void generateParenthesisCore(size_t left, size_t right, size_t n, std::string &str, std::vector<std::string> &result)
 {
     // 当括号均已填完时，则存储并返回
     if (str.size() == 2 * n)
@@ -27,9 +27,9 @@ void generateParenthesisCore(int left, int right, int n, std::string &str, std::
     }
 }
 
-std::vector<std::string> generateParenthesis(int n)
+std::vector<std::string> generateParenthesis(size_t n)
 {
-    if (n <= 0)
+    if (n == 0)
     {
         return {};
     }
@@ -43,26 +43,34 @@ std::vector<std::string> generateParenthesis(int n)
 }
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
 {
     /**
-     * => ()
-     * => (()) ()()
-     * => ((())) (()()) (())() ()(()) ()()()
-     * => (((()))) ((()())) ((())()) ((()))() (()(())) (()()()) (()())() (())(()) (())()() ()((())) ()(()()) ()(())() ()()(()) ()()()()
+     * => {  }
+     * => { () }
+     * => { (()), ()() }
+     * => { ((())), (()()), (())(), ()(()), ()()() }
+     * => { (((()))), ((()())), ((())()), ((()))(), (()(())), (()()()), (()())(), (())(()), (())()(), ()((())), ()(()()), ()(())(), ()()(()), ()()()() }
      */
     for (int i = 0; i < 5; i++)
     {
-        print(generateParenthesis(i));
+        std::cout << generateParenthesis(i) << std::endl;
     }
 
     return 0;

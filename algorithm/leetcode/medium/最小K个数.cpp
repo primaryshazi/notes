@@ -98,13 +98,20 @@ std::vector<int> smallestK(std::vector<int> &arr, int k)
 #endif
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
@@ -112,20 +119,20 @@ int main()
     std::vector<int> arr = { 7, 5, 3, 9, 1, 8, 2, 6, 4 };
 
     /**
-     * =>
-     * => 1
-     * => 1 2
-     * => 1 2 3
-     * => 1 2 3 4
-     * => 1 2 3 4 5
-     * => 1 2 3 4 5 6
-     * => 1 2 3 4 5 6 7
-     * => 1 2 3 4 5 6 7 8
-     * => 1 2 3 4 5 6 7 8 9
+     * => {  }
+     * => { 1 }
+     * => { 1, 2 }
+     * => { 1, 2, 3 }
+     * => { 1, 2, 3, 4 }
+     * => { 1, 2, 3, 4, 5 }
+     * => { 1, 2, 3, 4, 5, 6 }
+     * => { 1, 2, 3, 4, 5, 6, 7 }
+     * => { 1, 2, 3, 4, 5, 6, 7, 8 }
+     * => { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
      */
     for (int i = 0; i < 10; i++)
     {
-        print(smallestK(arr, i));
+        std::cout << smallestK(arr, i) << std::endl;
     }
 
     return 0;

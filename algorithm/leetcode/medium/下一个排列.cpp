@@ -28,13 +28,20 @@ void nextPermutation(std::vector<int> &nums)
 }
 
 template <typename T>
-void print(const std::vector<T> &v)
+std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 {
-    for (auto &t : v)
+    os << "{ ";
+    for (auto it = v.begin(); it != v.end(); ++it)
     {
-        std::cout << t << " ";
+        if (it != v.begin())
+        {
+            os << ", ";
+        }
+        os << *it;
     }
-    std::cout << std::endl;
+    os << " }";
+
+    return os;
 }
 
 int main()
@@ -44,16 +51,16 @@ int main()
     std::vector<int> v3 = { 1, 3, 5, 4, 2 };
 
     /**
-     * => 1 2 3 5 4
-     * => 1 2 3 4 5
-     * => 1 4 2 3 5
+     * => { 1, 2, 3, 5, 4 }
+     * => { 1, 2, 3, 4, 5 }
+     * => { 1, 4, 2, 3, 5 }
      */
     nextPermutation(v1);
-    print(v1);
+    std::cout << v1 << std::endl;
     nextPermutation(v2);
-    print(v2);
+    std::cout << v2 << std::endl;
     nextPermutation(v3);
-    print(v3);
+    std::cout << v3 << std::endl;
 
     return 0;
 }
