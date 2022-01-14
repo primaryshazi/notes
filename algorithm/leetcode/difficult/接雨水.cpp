@@ -26,7 +26,7 @@ int trap(const std::vector<int> &height)
         rightMax[i] = std::max(rightMax[i + 1], height[i]);
     }
 
-    // 二者取并集，并肩去所占高度，及该格可容纳高度
+    // 二者取并集，并减去所占高度，及该格可容纳高度
     int max = 0;
     for (int i = 0; i < n; i++)
     {
