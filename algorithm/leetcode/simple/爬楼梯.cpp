@@ -18,6 +18,18 @@ int climbStairs(int n)
 
 int main()
 {
+    /**
+     * => 0  1
+     * => 1  1
+     * => 2  2
+     * => 3  3
+     * => 4  5
+     * => 5  8
+     * => 6  13
+     * => 7  21
+     * => 8  34
+     * => 9  55
+     */
     for (int i = 0; i < 10; i++)
     {
         std::cout << i << "  " << climbStairs(i) << std::endl;
