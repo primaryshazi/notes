@@ -14,21 +14,21 @@ class LRUCache
 {
 public:
     LRUCache() : LRUCache(10) {}
-    LRUCache(int capacity) : _capacity(capacity), _size(0)
+    LRUCache(int capacity) : capacity_(capacity), size_(0)
     {
-        _head = new LinkNode();
-        _tail = new LinkNode();
-        _head->next = _tail;
-        _tail->prev = _head;
+        head_ = new LinkNode();
+        tail_ = new LinkNode();
+        head_->next = tail_;
+        tail_->prev = head_;
     }
 
     int get(int key)
     {
-        if (_cache.count(key) == 0)
+        if (cache_.count(key) == 0)
         {
             return -1;
         }
-        LinkNode *node = _cache[key];
+        LinkNode *node = cache_[key];
         moveToHead(node);
 
         return node->value;
@@ -40,24 +40,24 @@ public:
          * 无此key则新增节点至头部，超限则移除尾部节点
          * 有key则更新值并移动至头部
          */
-        if (_cache.count(key) == 0)
+        if (cache_.count(key) == 0)
         {
             LinkNode *node = new LinkNode(key, value);
-            _cache[key] = node;
+            cache_[key] = node;
             addToHead(node);
-            ++_size;
+            ++size_;
 
-            if (_size > _capacity)
+            if (size_ > capacity_)
             {
                 LinkNode *lastNode = removeTail();
-                _cache.erase(lastNode->key);
+                cache_.erase(lastNode->key);
                 delete lastNode;
-                --_size;
+                --size_;
             }
         }
         else
         {
-            LinkNode *node = _cache[key];
+            LinkNode *node = cache_[key];
             node->value = value;
             moveToHead(node);
         }
@@ -71,10 +71,10 @@ private:
      */
     void addToHead(LinkNode *node)
     {
-        node->prev = _head;
-        _head->next->prev = node;
-        node->next = _head->next;
-        _head->next = node;
+        node->prev = head_;
+        head_->next->prev = node;
+        node->next = head_->next;
+        head_->next = node;
     }
 
     /**
@@ -95,7 +95,7 @@ private:
      */
     LinkNode *removeTail()
     {
-        LinkNode *tmp = _tail->prev;
+        LinkNode *tmp = tail_->prev;
         removeNode(tmp);
         return tmp;
     }
@@ -112,11 +112,11 @@ private:
     }
 
 private:
-    std::unordered_map<int, LinkNode *> _cache;     // 缓存key -> node
-    LinkNode *_head;        // 记录node访问时间顺序
-    LinkNode *_tail;
-    int _capacity;
-    int _size;
+    std::unordered_map<int, LinkNode *> cache_; // 缓存key -> node
+    LinkNode *head_;                            // 记录node访问时间顺序
+    LinkNode *tail_;
+    int capacity_;
+    int size_;
 };
 
 int main()

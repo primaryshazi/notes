@@ -1,29 +1,30 @@
 #include <iostream>
 
-#define SOLUTION_OPTION 1
+#define SOLUTION_OPTION 4
 #define NUMBER_VALUE 10
 
 #if SOLUTION_OPTION == 1
 class Sum
 {
-private:
-    static int _num;
-    static int _sum;
 public:
     Sum()
     {
-        ++_num;
-        _sum += _num;
+        ++num_;
+        sum_ += num_;
     }
 
     static int sumNums()
     {
-        return Sum::_sum;
+        return Sum::sum_;
     }
+
+private:
+    static int num_;
+    static int sum_;
 };
 
-int Sum::_num = 0;
-int Sum::_sum = 0;
+int Sum::num_ = 0;
+int Sum::sum_ = 0;
 
 int sumNums(int n = NUMBER_VALUE)
 {
@@ -45,7 +46,7 @@ public:
     }
 };
 
-Base *g_arrBase[2] = { nullptr };
+Base *g_arrBase[2] = {nullptr};
 
 class Derived : public Base
 {
@@ -69,7 +70,7 @@ int sumNums(int n = NUMBER_VALUE)
 
 #elif SOLUTION_OPTION == 3
 
-template<int n>
+template <int n>
 class Sum
 {
 public:
@@ -79,7 +80,7 @@ public:
     };
 };
 
-template<>
+template <>
 class Sum<1>
 {
 public:

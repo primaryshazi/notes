@@ -6,37 +6,37 @@ class MinStack
 public:
     void push(int value)
     {
-        _minValue = std::min(value, _minValue);
-        _stack.push(value);
-        _minStack.push(_minValue);
+        min_ = std::min(value, min_);
+        stack_.push(value);
+        minStack_.push(min_);
     }
 
     void pop()
     {
-        if (_stack.empty())
+        if (stack_.empty())
         {
             return;
         }
 
-        _stack.pop();
-        _minStack.pop();
-        _minValue = (_minStack.empty() ? INT_MAX : _minStack.top());
+        stack_.pop();
+        minStack_.pop();
+        min_ = (minStack_.empty() ? INT_MAX : minStack_.top());
     }
 
     int top()
     {
-        return _stack.top();
+        return stack_.top();
     }
 
     int min()
     {
-        return _minValue;
+        return min_;
     }
 
 private:
-    int _minValue = INT_MAX;    // 当前最小值
-    std::stack<int> _stack;     // 元素栈
-    std::stack<int> _minStack;  // 每个元素入栈时的最小元素
+    int min_ = INT_MAX;        // 当前最小值
+    std::stack<int> stack_;    // 元素栈
+    std::stack<int> minStack_; // 每个元素入栈时的最小元素
 };
 
 int main()
