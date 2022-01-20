@@ -22,12 +22,8 @@ public:
 
 class Adapter
 {
-private:
-    std::shared_ptr<Car> spCar;
-    std::shared_ptr<Airplane> spAirplane;
-
 public:
-    Adapter() : spCar(new Car{}), spAirplane(new Airplane{}) {}
+    Adapter() : spCar_(std::make_shared<Car>()), spAirplane_(std::make_shared<Airplane>()) {}
 
     ~Adapter() {}
 
@@ -35,29 +31,33 @@ public:
     {
         if (type == "Car")
         {
-            spCar->manufacturing();
+            spCar_->manufacturing();
         }
         else if (type == "Airplane")
         {
-            spAirplane->manufacturing();
+            spAirplane_->manufacturing();
         }
         else
         {
             std::cout << "error" << std::endl;
         }
     }
+
+private:
+    std::shared_ptr<Car> spCar_;
+    std::shared_ptr<Airplane> spAirplane_;
 };
 
 int main()
 {
-    Adapter adapter;
+    std::shared_ptr<Adapter> sp = std::make_shared<Adapter>();
 
     /**
      * => Manufacturing Car
      * => Manufacturing Airplane
      */
-    adapter.make("Car");
-    adapter.make("Airplane");
+    sp->make("Car");
+    sp->make("Airplane");
 
     return 0;
 }

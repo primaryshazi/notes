@@ -22,24 +22,24 @@ public:
 
 class Calculator
 {
-private:
-    std::weak_ptr<Operator> _wpOp;
-
 public:
-    Calculator(const std::shared_ptr<Operator> &c_spOp) : _wpOp(c_spOp) {}
+    Calculator(const std::shared_ptr<Operator> &c_spOp) : wpOP_(c_spOp) {}
 
     virtual ~Calculator() {}
 
     int exec(const int first, const int second)
     {
-        return !_wpOp.expired() && _wpOp.lock() ? _wpOp.lock()->exec(first, second) : 0;
+        return !wpOP_.expired() && wpOP_.lock() ? wpOP_.lock()->exec(first, second) : 0;
     }
+
+private:
+    std::weak_ptr<Operator> wpOP_;
 };
 
 int main()
 {
-    std::shared_ptr<Operator> spAdd{ new AdditionOp{} };
-    std::shared_ptr<Operator> spSub{ new SubtractOp{} };
+    std::shared_ptr<Operator> spAdd = std::make_shared<AdditionOp>();
+    std::shared_ptr<Operator> spSub = std::make_shared<SubtractOp>();
 
     /**
      * => 3

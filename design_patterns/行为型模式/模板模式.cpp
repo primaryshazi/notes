@@ -42,8 +42,8 @@ private:
 
 int main()
 {
-    std::shared_ptr<Game> spR6{ new RainbowSix{} };
-    std::shared_ptr<Game> spBF{ new Battlefield{} };
+    std::shared_ptr<Game> spR6 = std::make_shared<RainbowSix>();
+    std::shared_ptr<Game> spBF = std::make_shared<Battlefield>();
 
     /**
      * => Log in R6

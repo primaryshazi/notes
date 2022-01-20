@@ -1,90 +1,89 @@
 #include <iostream>
 #include <memory>
-#include <string>
 
 class Expression
 {
 public:
     virtual ~Expression() {}
 
-    virtual bool IsReal() = 0;
+    virtual bool isReal() = 0;
 };
 
 class FlagExpression : public Expression
 {
-private:
-    bool _flag;
-
 public:
-    FlagExpression(bool flag) : _flag(flag) {}
+    FlagExpression(bool flag) : flag_(flag) {}
 
     virtual ~FlagExpression() {}
 
-    virtual bool IsReal() override { return _flag; }
+    virtual bool isReal() override { return flag_; }
+
+private:
+    bool flag_;
 };
 
 class AndExpression : public Expression
 {
-private:
-    std::weak_ptr<Expression> _wpExprFirst;
-    std::weak_ptr<Expression> _wpExprSecond;
-
 public:
     AndExpression(const std::shared_ptr<Expression> &c_spExprFirst, const std::shared_ptr<Expression> &c_spExprSecond)
-        : _wpExprFirst(c_spExprFirst), _wpExprSecond(c_spExprSecond) {}
+        : wpExprFirst_(c_spExprFirst), wpExprSecond_(c_spExprSecond) {}
 
     virtual ~AndExpression() {}
 
-    virtual bool IsReal() override { return _wpExprFirst.lock()->IsReal() && _wpExprSecond.lock()->IsReal(); }
+    virtual bool isReal() override { return wpExprFirst_.lock()->isReal() && wpExprSecond_.lock()->isReal(); }
+
+private:
+    std::weak_ptr<Expression> wpExprFirst_;
+    std::weak_ptr<Expression> wpExprSecond_;
 };
 
 class OrExpression : public Expression
 {
-private:
-    std::weak_ptr<Expression> _wpExprFirst;
-    std::weak_ptr<Expression> _wpExprSecond;
-
 public:
     OrExpression(const std::shared_ptr<Expression> &c_spExprFirst, const std::shared_ptr<Expression> &c_spExprSecond)
-        : _wpExprFirst(c_spExprFirst), _wpExprSecond(c_spExprSecond) {}
+        : wpExprFirst_(c_spExprFirst), wpExprSecond_(c_spExprSecond) {}
 
     virtual ~OrExpression() {}
 
-    virtual bool IsReal() override { return _wpExprFirst.lock()->IsReal() || _wpExprSecond.lock()->IsReal(); }
+    virtual bool isReal() override { return wpExprFirst_.lock()->isReal() || wpExprSecond_.lock()->isReal(); }
+
+private:
+    std::weak_ptr<Expression> wpExprFirst_;
+    std::weak_ptr<Expression> wpExprSecond_;
 };
 
 class XorExpression : public Expression
 {
-private:
-    std::weak_ptr<Expression> _wpExprFirst;
-    std::weak_ptr<Expression> _wpExprSecond;
-
 public:
     XorExpression(const std::shared_ptr<Expression> &c_spExprFirst, const std::shared_ptr<Expression> &c_spExprSecond)
-        : _wpExprFirst(c_spExprFirst), _wpExprSecond(c_spExprSecond) {}
+        : wpExprFirst_(c_spExprFirst), wpExprSecond_(c_spExprSecond) {}
 
     virtual ~XorExpression() {}
 
-    virtual bool IsReal() override { return !(_wpExprFirst.lock()->IsReal() == _wpExprSecond.lock()->IsReal()); }
+    virtual bool isReal() override { return !(wpExprFirst_.lock()->isReal() == wpExprSecond_.lock()->isReal()); }
+
+private:
+    std::weak_ptr<Expression> wpExprFirst_;
+    std::weak_ptr<Expression> wpExprSecond_;
 };
 
 int main()
 {
-    std::shared_ptr<Expression> spTrue{ new FlagExpression{true} };
-    std::shared_ptr<Expression> spFalse{ new FlagExpression{false} };
+    std::shared_ptr<Expression> spTrue = std::make_shared<FlagExpression>(true);
+    std::shared_ptr<Expression> spFalse = std::make_shared<FlagExpression>(false);
 
-    std::shared_ptr<Expression> spAnd{ new AndExpression{spTrue, spFalse} };
-    std::shared_ptr<Expression> spOr{ new OrExpression{spTrue, spFalse} };
-    std::shared_ptr<Expression> spXor{ new XorExpression{spTrue, spFalse} };
+    std::shared_ptr<Expression> spAnd = std::make_shared<AndExpression>(spTrue, spFalse);
+    std::shared_ptr<Expression> spOr = std::make_shared<OrExpression>(spTrue, spFalse);
+    std::shared_ptr<Expression> spXor = std::make_shared<XorExpression>(spTrue, spFalse);
 
     /**
      * => 0
      * => 1
      * => 1
      */
-    std::cout << spAnd->IsReal() << std::endl;
-    std::cout << spOr->IsReal() << std::endl;
-    std::cout << spXor->IsReal() << std::endl;
+    std::cout << spAnd->isReal() << std::endl;
+    std::cout << spOr->isReal() << std::endl;
+    std::cout << spXor->isReal() << std::endl;
 
     return 0;
 }

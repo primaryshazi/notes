@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 class Phone
 {
@@ -20,25 +21,27 @@ public:
 
 class PhoneManufacturing
 {
-private:
-    IPhone _iPone;
-    Huawei _huawei;
-
 public:
-    void ManufacturingIPhone() { _iPone.manufacturing(); }
-    void ManufacturingHuawei() { _huawei.manufacturing(); }
+    PhoneManufacturing() : iPhone_(std::make_shared<IPhone>()), huawei_(std::make_shared<Huawei>()) {}
+
+    void ManufacturingIPhone() { iPhone_->manufacturing(); }
+    void ManufacturingHuawei() { huawei_->manufacturing(); }
+
+private:
+    std::shared_ptr<IPhone> iPhone_;
+    std::shared_ptr<Huawei> huawei_;
 };
 
 int main()
 {
-    PhoneManufacturing phoneMF;
+    std::shared_ptr<PhoneManufacturing> sp = std::make_shared<PhoneManufacturing>();
 
     /**
      * Manufacturing iPhone
      * Manufacturing huawei
      */
-    phoneMF.ManufacturingIPhone();
-    phoneMF.ManufacturingHuawei();
+    sp->ManufacturingIPhone();
+    sp->ManufacturingHuawei();
 
     return 0;
 }

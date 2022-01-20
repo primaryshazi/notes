@@ -22,28 +22,28 @@ public:
 
 class CloudComputer : public Computer
 {
-private:
-    std::weak_ptr<Computer> _wpPC;
-
 public:
-    CloudComputer(const std::shared_ptr<Computer> &c_spPC) : _wpPC(c_spPC) {}
+    CloudComputer(const std::shared_ptr<Computer> &spPC) : wpPC_(spPC) {}
 
     virtual ~CloudComputer() {}
 
     virtual void work() override
     {
-        if (_wpPC.lock())
+        if (wpPC_.lock())
         {
-            _wpPC.lock()->work();
+            wpPC_.lock()->work();
             std::cout << "e" << std::endl;
         }
     }
+
+private:
+    std::weak_ptr<Computer> wpPC_;
 };
 
 int main()
 {
-    std::shared_ptr<Computer> pRC{ new RealComputer{} };
-    std::shared_ptr<Computer> pCC{ new CloudComputer{pRC} };
+    std::shared_ptr<Computer> pRC = std::make_shared<RealComputer>();
+    std::shared_ptr<Computer> pCC = std::make_shared<CloudComputer>(pRC);
 
     /**
      * => pi

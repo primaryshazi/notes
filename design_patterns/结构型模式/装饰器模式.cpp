@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <memory>
 
 class Car
 {
@@ -9,13 +9,15 @@ public:
 
 class AdvancedCar
 {
-protected:
-    Car _car;
-
 public:
+    AdvancedCar() : spCar_(std::make_shared<Car>()) {}
+
     ~AdvancedCar() {}
 
     virtual void drive() = 0;
+
+protected:
+    std::shared_ptr<Car> spCar_;
 };
 
 class Tank : public AdvancedCar
@@ -23,20 +25,20 @@ class Tank : public AdvancedCar
 public:
     virtual void drive() override
     {
-        _car.drive();
+        spCar_->drive();
         std::cout << "Can fire shells" << std::endl;
     }
 };
 
 int main()
 {
-    Tank tank;
+    std::shared_ptr<Tank> sp = std::make_shared<Tank>();
 
     /**
      * => Can drive
      * => Can fire shells
      */
-    tank.drive();
+    sp->drive();
 
     return 0;
 }

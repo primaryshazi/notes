@@ -15,47 +15,44 @@ public:
 
 class RealCountry : public Country
 {
-private:
-    std::string _name;
-
 public:
-    RealCountry(const std::string &c_name) : _name(c_name) {}
+    RealCountry(const std::string &name) : name_(name) {}
 
     virtual ~RealCountry() {}
 
-    virtual std::string name() override { return _name; }
+    virtual std::string name() override { return name_; }
 
     virtual bool isNull() override { return true; }
+
+private:
+    std::string name_;
 };
 
 class NullCountry : public Country
 {
-private:
-    std::string _name;
-
 public:
-    NullCountry() : _name("nullptr") {}
+    NullCountry() : name_("nullptr") {}
 
     virtual ~NullCountry() {}
 
-    virtual std::string name() override { return _name; }
+    virtual std::string name() override { return name_; }
 
     virtual bool isNull() override { return false; }
+
+private:
+    std::string name_;
 };
 
-class CountryFactroy
+class CountryFactory
 {
-private:
-    std::list<std::string> _lsName;
-
 public:
-    CountryFactroy() : _lsName({ "China", "America" }) {}
+    CountryFactory() : lsName_({"China", "America"}) {}
 
-    ~CountryFactroy() {}
+    ~CountryFactory() {}
 
     std::shared_ptr<Country> assign(const std::string &c_name)
     {
-        for (const auto &c_str : _lsName)
+        for (const auto &c_str : lsName_)
         {
             if (c_str == c_name)
             {
@@ -63,16 +60,20 @@ public:
             }
         }
 
-        return std::make_shared<NullCountry>();;
+        return std::make_shared<NullCountry>();
+        ;
     }
+
+private:
+    std::list<std::string> lsName_;
 };
 
 int main()
 {
-    CountryFactroy cf;
-    std::shared_ptr<Country> spChina = cf.assign("China");
-    std::shared_ptr<Country> spAmerica = cf.assign("America");
-    std::shared_ptr<Country> spNull = cf.assign("Null");
+    std::shared_ptr<CountryFactory> spFactory = std::make_shared<CountryFactory>();
+    std::shared_ptr<Country> spChina = spFactory->assign("China");
+    std::shared_ptr<Country> spAmerica = spFactory->assign("America");
+    std::shared_ptr<Country> spNull = spFactory->assign("Null");
 
     /**
      * => China

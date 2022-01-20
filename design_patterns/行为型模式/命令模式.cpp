@@ -1,67 +1,67 @@
 #include <iostream>
 #include <memory>
-#include <string>
 #include <list>
 #include <functional>
-#include <algorithm>
 
-typedef std::function<void()> Task;
+typedef std::function<void()> SimpleTask;
 
 class Command
 {
-protected:
-    Task _task;
-
 public:
     virtual ~Command() {}
 
     virtual void exec() = 0;
+
+protected:
+    SimpleTask task_;
 };
 
 class RealCmd : public Command
 {
 public:
-    RealCmd(Task task) { _task = task; }
+    RealCmd(const SimpleTask &task) { task_ = task; }
 
     virtual ~RealCmd() {}
 
-    virtual void exec() override { _task(); }
+    virtual void exec() override { task_(); }
 };
 
 class User
 {
-private:
-    std::list<std::weak_ptr<Command>> _lsCmd;
-
 public:
-    void insert(const std::weak_ptr<Command> &c_spCmd) { _lsCmd.emplace_back(c_spCmd); }
+    void insert(const std::weak_ptr<Command> &spCmd) { lsCmd_.emplace_back(spCmd); }
 
-    void clear() { _lsCmd.clear(); }
+    void clear() { lsCmd_.clear(); }
 
     void exec() const
     {
-        for (const auto &wp : _lsCmd)
+        for (const auto &wp : lsCmd_)
         {
             wp.lock()->exec();
         }
     }
+
+private:
+    std::list<std::weak_ptr<Command>> lsCmd_;
 };
 
 int main()
 {
-    User root;
-    std::shared_ptr<Command> spHelloWorld{ new RealCmd{[]() { std::cout << "Hello World!" << std::endl; } } };
-    std::shared_ptr<Command> spAreYouOK{ new RealCmd{[]() { std::cout << "Are you OK?" << std::endl; } } };
+    std::shared_ptr<User> spRoot = std::make_shared<User>();
+    std::shared_ptr<Command> spHelloWorld = std::make_shared<RealCmd>([]()
+                                                                      { std::cout << "Hello World!" << std::endl; });
+    std::shared_ptr<Command> spAreYouOK = std::make_shared<RealCmd>([]()
+                                                                    { std::cout << "Are you OK?" << std::endl; });
 
-    root.insert(spHelloWorld);
-    root.insert(spAreYouOK);
+    spRoot->insert(spHelloWorld);
+    spRoot->insert(spAreYouOK);
 
     /**
      * => Hello World!
      * => Are you OK?
      */
-    root.exec();
-    root.clear();
+    spRoot->exec();
+    spRoot->clear();
 
     return 0;
 }

@@ -5,11 +5,7 @@
 class Computer
 {
 protected:
-    int _max;
-    std::weak_ptr<Computer> _wpPC;
-
-protected:
-    Computer() : _max(0) {}
+    Computer() : max_(0) {}
 
 public:
     virtual ~Computer() {}
@@ -17,40 +13,44 @@ public:
     virtual void assign(const std::shared_ptr<Computer> &c_spPC) = 0;
 
     virtual void work(int value) = 0;
+
+protected:
+    int max_;
+    std::weak_ptr<Computer> wpPC_;
 };
 
 class SuperComputer : public Computer
 {
 public:
-    SuperComputer(const int c_max) : Computer() { _max = c_max; }
+    SuperComputer(const int max) : Computer() { max_ = max; }
 
     virtual ~SuperComputer() {}
 
-    virtual void assign(const std::shared_ptr<Computer> &c_spPC) override { _wpPC = c_spPC; }
+    virtual void assign(const std::shared_ptr<Computer> &spPC) override { wpPC_ = spPC; }
 
     virtual void work(int value) override
     {
-        if (value <= _max)
+        if (value <= max_)
         {
-            printf("[%d] : I can do [%d]\n", _max, value);
+            printf("[%d] : I can do [%d]\n", max_, value);
         }
-        else if (!_wpPC.expired() && _wpPC.lock())
+        else if (!wpPC_.expired() && wpPC_.lock())
         {
-            printf("[%d] : I give [%d] to another\n", _max, value);
-            _wpPC.lock()->work(value);
+            printf("[%d] : I give [%d] to another\n", max_, value);
+            wpPC_.lock()->work(value);
         }
         else
         {
-            printf("[%d] : I can't do [%d]\n", _max, value);
+            printf("[%d] : I can't do [%d]\n", max_, value);
         }
     }
 };
 
 int main()
 {
-    std::shared_ptr<Computer> scp_10{ new SuperComputer(10) };
-    std::shared_ptr<Computer> scp_20{ new SuperComputer(20) };
-    std::shared_ptr<Computer> scp_50{ new SuperComputer(50) };
+    std::shared_ptr<Computer> scp_10 = std::make_shared<SuperComputer>(10);
+    std::shared_ptr<Computer> scp_20 = std::make_shared<SuperComputer>(20);
+    std::shared_ptr<Computer> scp_50 = std::make_shared<SuperComputer>(50);
 
     scp_10->assign(scp_20);
     scp_20->assign(scp_50);

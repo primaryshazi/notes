@@ -4,13 +4,13 @@
 
 class Phone
 {
-protected:
-    std::string _name;
-
 public:
-    virtual void assignName(const std::string &c_name) final { _name = c_name; }
+    virtual void assignName(const std::string &name) final { name_ = name; }
 
     virtual void manufacturing() {}
+
+protected:
+    std::string name_;
 };
 
 class Huawei : public Phone
@@ -18,7 +18,7 @@ class Huawei : public Phone
 public:
     virtual void manufacturing() override
     {
-        std::cout << "manufacturing " << _name << std::endl;
+        std::cout << "manufacturing " << name_ << std::endl;
     }
 };
 
@@ -27,34 +27,34 @@ class Mi : public Phone
 public:
     virtual void manufacturing() override
     {
-        std::cout << "manufacturing " << _name << std::endl;
+        std::cout << "manufacturing " << name_ << std::endl;
     }
 };
 
 class ManufacturingPhone
 {
-private:
-    std::weak_ptr<Phone> _wpPhone;
-
 public:
-    ManufacturingPhone(const std::shared_ptr<Phone> &c_spPhone) : _wpPhone(c_spPhone) {}
+    ManufacturingPhone(const std::shared_ptr<Phone> &spPhone) : wpPhone_(spPhone) {}
 
-    void manufacturing(const std::string &c_name)
+    void manufacturing(const std::string &name)
     {
-        if (!_wpPhone.expired() && _wpPhone.lock())
+        if (!wpPhone_.expired() && wpPhone_.lock())
         {
-            _wpPhone.lock()->assignName(c_name);
-            _wpPhone.lock()->manufacturing();
+            wpPhone_.lock()->assignName(name);
+            wpPhone_.lock()->manufacturing();
         }
     }
+
+private:
+    std::weak_ptr<Phone> wpPhone_;
 };
 
 int main()
 {
-    std::shared_ptr<Mi> spMi{ new Mi() };
-    std::shared_ptr<Huawei> spHuawei{ new Huawei() };
-    ManufacturingPhone manufacturingMI{ spMi };
-    ManufacturingPhone manufacturingHuawei{ spHuawei };
+    std::shared_ptr<Mi> spMi = std::shared_ptr<Mi>();
+    std::shared_ptr<Huawei> spHuawei = std::shared_ptr<Huawei>();
+    ManufacturingPhone manufacturingMI{spMi};
+    ManufacturingPhone manufacturingHuawei{spHuawei};
 
     /**
      * manufacturing Mi

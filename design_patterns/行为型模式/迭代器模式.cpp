@@ -30,38 +30,35 @@ public:
 
 class RealIter : public Iter
 {
-private:
-    std::weak_ptr<Aggregate> _wpAgt;
-    size_t _index;
-
 public:
-    RealIter(const std::shared_ptr<Aggregate> &c_spAgt) : _wpAgt(c_spAgt), _index(0) {}
+    RealIter(const std::shared_ptr<Aggregate> &c_spAgt) : wpAgt_(c_spAgt), index_(0) {}
 
     virtual ~RealIter() {}
 
     virtual void first() override
     {
-        _index = 0;
+        index_ = 0;
     }
     virtual void next() override
     {
-        _index++;
+        index_++;
     }
     virtual int &current() override
     {
-        return (*_wpAgt.lock())[_index];
+        return (*wpAgt_.lock())[index_];
     }
     virtual bool isEnd() override
     {
-        return _index >= _wpAgt.lock()->size();
+        return index_ >= wpAgt_.lock()->size();
     }
+
+private:
+    std::weak_ptr<Aggregate> wpAgt_;
+    size_t index_;
 };
 
 class RealAggregate : public std::enable_shared_from_this<RealAggregate>, public Aggregate
 {
-private:
-    std::vector<int> _vecInt;
-
 public:
     RealAggregate() {}
 
@@ -69,7 +66,7 @@ public:
 
     virtual void push(int value) override
     {
-        _vecInt.emplace_back(value);
+        vElement_.emplace_back(value);
     }
 
     virtual std::shared_ptr<Iter> create() override
@@ -79,18 +76,21 @@ public:
 
     virtual size_t size() override
     {
-        return _vecInt.size();
+        return vElement_.size();
     }
 
     virtual int &operator[](int index) override
     {
-        return _vecInt[index];
+        return vElement_[index];
     }
+
+private:
+    std::vector<int> vElement_;
 };
 
 int main()
 {
-    std::shared_ptr<Aggregate> spAgt{ new RealAggregate{} };
+    std::shared_ptr<Aggregate> spAgt = std::make_shared<RealAggregate>();
 
     for (int i = 0; i < 5; i++)
     {
@@ -98,7 +98,6 @@ int main()
     }
 
     std::shared_ptr<Iter> it = spAgt->create();
-
     it->first();
 
     /**

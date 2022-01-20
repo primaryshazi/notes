@@ -13,66 +13,66 @@ enum PhoneType
 class User
 {
 private:
-    PhoneType _phone;
+    PhoneType phone_;
 
 public:
-    User(const PhoneType c_phone) : _phone(c_phone) {}
+    User(const PhoneType phone) : phone_(phone) {}
     virtual ~User() {}
 
-    int phone() const { return _phone; }
+    int phone() const { return phone_; }
 
     virtual void buy() {}
 };
 
-class PhoneUser : public User
+class IPhoneUser : public User
 {
 public:
-    PhoneUser() : User(Phone_Type_IPhone) {}
+    IPhoneUser() : User(Phone_Type_IPhone) {}
     virtual void buy() override { std::cout << "IPhone" << std::endl; }
 };
 
-class HuawePhone : public User
+class HuaweiPhone : public User
 {
 public:
-    HuawePhone() : User(Phone_Type_Huawei) {}
+    HuaweiPhone() : User(Phone_Type_Huawei) {}
     virtual void buy() override { std::cout << "Huawei" << std::endl; }
 };
 
 class PhoneStore
 {
 private:
-    std::shared_ptr<PhoneUser> _spIPhoneUser;
-    std::shared_ptr<HuawePhone> _spHuaweiUser;
-    std::map<std::string, PhoneType> _mapUser;
+    std::shared_ptr<IPhoneUser> spIPhoneUser_;
+    std::shared_ptr<HuaweiPhone> spHuaweiUser_;
+    std::map<std::string, PhoneType> mapUser_;
 
 public:
-    PhoneStore() : _spIPhoneUser(new PhoneUser()), _spHuaweiUser(new HuawePhone()) {}
+    PhoneStore() : spIPhoneUser_(new IPhoneUser()), spHuaweiUser_(new HuaweiPhone()) {}
 
     ~PhoneStore() {}
 
-    void buy(const std::string &c_name, const PhoneType c_phone)
+    void buy(const std::string &name, const PhoneType phone)
     {
-        std::cout << c_name << " buy a ";
-        switch (c_phone)
+        std::cout << name << " buy a ";
+        switch (phone)
         {
         case Phone_Type_IPhone:
-            _spIPhoneUser->buy();
+            spIPhoneUser_->buy();
             break;
         case Phone_Type_Huawei:
-            _spHuaweiUser->buy();
+            spHuaweiUser_->buy();
             break;
         default:
             std::cout << "Hammer" << std::endl;
             return;
         }
-        _mapUser[c_name] = c_phone;
+        mapUser_[name] = phone;
     }
 
-    PhoneType acquire(const std::string &c_name)
+    PhoneType acquire(const std::string &name)
     {
-        auto it = _mapUser.find(c_name);
+        auto it = mapUser_.find(name);
 
-        if (_mapUser.end() == it)
+        if (mapUser_.end() == it)
         {
             return Phone_Type_None;
         }
@@ -85,21 +85,21 @@ public:
 
 int main()
 {
-    PhoneStore ps;
+    std::shared_ptr<PhoneStore> sp = std::make_shared<PhoneStore>();
 
     /**
      * => father by a IPhone
      * => mather buy a Huawei
      */
-    ps.buy("father", Phone_Type_IPhone);
-    ps.buy("mather", Phone_Type_Huawei);
+    sp->buy("father", Phone_Type_IPhone);
+    sp->buy("mather", Phone_Type_Huawei);
 
     /**
      * => 1
      * => 2
      */
-    std::cout << ps.acquire("father") << std::endl;
-    std::cout << ps.acquire("mather") << std::endl;
+    std::cout << sp->acquire("father") << std::endl;
+    std::cout << sp->acquire("mather") << std::endl;
 
     return 0;
 }

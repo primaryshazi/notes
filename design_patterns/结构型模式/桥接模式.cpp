@@ -5,13 +5,13 @@
 class OS
 {
 public:
-    virtual void insatll() = 0;
+    virtual void install() = 0;
 };
 
 class Windows : public OS
 {
 public:
-    virtual void insatll() override
+    virtual void install() override
     {
         std::cout << "Install Windows" << std::endl;
     }
@@ -20,7 +20,7 @@ public:
 class Linux : public OS
 {
 public:
-    virtual void insatll() override
+    virtual void install() override
     {
         std::cout << "Install Linux" << std::endl;
     }
@@ -29,31 +29,31 @@ public:
 class Computer
 {
 public:
-    virtual void insatall(const std::shared_ptr<OS> &c_spOS) = 0;
+    virtual void install(const std::shared_ptr<OS> &spOS) = 0;
 };
 
 class Apple : public Computer
 {
 public:
-    virtual void insatall(const std::shared_ptr<OS> &c_spOS) override
+    virtual void install(const std::shared_ptr<OS> &spOS) override
     {
-        c_spOS->insatll();
+        spOS->install();
     }
 };
 
 class Huawei : public Computer
 {
 public:
-    virtual void insatall(const std::shared_ptr<OS> &c_spOS) override
+    virtual void install(const std::shared_ptr<OS> &spOS) override
     {
-        c_spOS->insatll();
+        spOS->install();
     }
 };
 
 int main()
 {
-    std::shared_ptr<Windows> spWindowsOS{ new Windows{} };
-    std::shared_ptr<Linux> spLinuxOS{ new Linux{} };
+    std::shared_ptr<Windows> spWindowsOS = std::make_shared<Windows>();
+    std::shared_ptr<Linux> spLinuxOS = std::make_shared<Linux>();
 
     Apple applePC;
     Huawei huaweiPC;
@@ -64,10 +64,10 @@ int main()
      * => Install Windows
      * => Install Linux
      */
-    applePC.insatall(spWindowsOS);
-    applePC.insatall(spLinuxOS);
-    huaweiPC.insatall(spWindowsOS);
-    huaweiPC.insatall(spLinuxOS);
+    applePC.install(spWindowsOS);
+    applePC.install(spLinuxOS);
+    huaweiPC.install(spWindowsOS);
+    huaweiPC.install(spLinuxOS);
 
     return 0;
 }

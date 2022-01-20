@@ -46,19 +46,19 @@ class Subject : public SubjectInterface
 public:
     virtual void insert(const std::shared_ptr<ObserverInterface> &spObr) override
     {
-        _vObrs.emplace_back(spObr);
+        vObs_.emplace_back(spObr);
     }
 
     virtual void notify() override
     {
-        std::for_each(_vObrs.begin(), _vObrs.end(), [&](const std::weak_ptr<ObserverInterface> &wpObr)
+        std::for_each(vObs_.begin(), vObs_.end(), [&](const std::weak_ptr<ObserverInterface> &wpObr)
                       { wpObr.lock()->exec(); });
     }
 
     virtual ~Subject() {}
 
 private:
-    std::vector<std::weak_ptr<ObserverInterface>> _vObrs;
+    std::vector<std::weak_ptr<ObserverInterface>> vObs_;
 };
 
 int main()

@@ -6,40 +6,40 @@ class Status;
 
 class Behavior
 {
-protected:
-    std::weak_ptr<Status> _wpStatus;
-
 public:
     Behavior() {}
 
     ~Behavior() {}
 
-    void assign(const std::weak_ptr<Status> &c_spStatus) { _wpStatus = c_spStatus; }
+    void assign(const std::weak_ptr<Status> &spStatus) { spStatus_ = spStatus; }
 
-    std::shared_ptr<Status> acquire() { return _wpStatus.lock(); }
+    std::shared_ptr<Status> acquire() { return spStatus_.lock(); }
+
+protected:
+    std::weak_ptr<Status> spStatus_;
 };
 
 class Status : public std::enable_shared_from_this<Status>
 {
-protected:
-    std::string _status;
-    std::weak_ptr<Behavior> _wpBhr;
-
 protected:
     Status() {}
 
 public:
     virtual ~Status() {}
 
-    virtual void work(const std::shared_ptr<Behavior> &c_spBhr) final { c_spBhr->assign(shared_from_this()); }
+    virtual void work(const std::shared_ptr<Behavior> &spBhr) final { spBhr->assign(shared_from_this()); }
 
-    virtual std::string current() final { return _status; }
+    virtual std::string current() final { return status_; }
+
+protected:
+    std::string status_;
+    std::weak_ptr<Behavior> wpBhr_;
 };
 
 class RunStatus : public Status
 {
 public:
-    RunStatus() { _status = "RUN"; }
+    RunStatus() { status_ = "RUN"; }
 
     virtual ~RunStatus() {}
 };
@@ -47,17 +47,16 @@ public:
 class WalkStatus : public Status
 {
 public:
-    WalkStatus() { _status = "WALK"; }
+    WalkStatus() { status_ = "WALK"; }
 
     virtual ~WalkStatus() {}
 };
 
 int main()
 {
-    std::shared_ptr<Behavior> spBehavior{ new Behavior{} };
-
-    std::shared_ptr<Status> spRun{ new RunStatus{} };
-    std::shared_ptr<Status> spWalk{ new WalkStatus{} };
+    std::shared_ptr<Behavior> spBehavior = std::make_shared<Behavior>();
+    std::shared_ptr<Status> spRun = std::make_shared<RunStatus>();
+    std::shared_ptr<Status> spWalk = std::make_shared<WalkStatus>();
 
     /**
      * => RUN

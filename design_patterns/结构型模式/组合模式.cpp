@@ -13,27 +13,24 @@ enum OrgType
 class Property
 {
 public:
-    std::string _name;
-    int _type;
-
-public:
     Property() {}
 
-    Property(const std::string &c_name, const int c_type) : _name(c_name), _type(c_type) {}
+    Property(const std::string &name, const int type) : name_(name), type_(type) {}
 
     ~Property() {}
+
+public:
+    std::string name_;
+    int type_;
 };
 
 class Organization
 {
-private:
-    Property _property;
-
 protected:
-    void assignProperty(const std::string &c_name, const OrgType c_type)
+    void assignProperty(const std::string &name, const OrgType type)
     {
-        _property._name = c_name;
-        _property._type = c_type;
+        property_.name_ = name;
+        property_.type_ = type;
     }
 
 public:
@@ -45,21 +42,24 @@ public:
 
     virtual void display() = 0;
 
-    virtual std::string name() const final { return _property._name; }
+    virtual std::string name() const final { return property_.name_; }
 
-    virtual int type() const final { return _property._type; }
+    virtual int type() const final { return property_.type_; }
+
+private:
+    Property property_;
 };
 
 class Department : public Organization
 {
 public:
-    Department(const std::string &c_name) { assignProperty(c_name, Org_Type_Company); }
+    Department(const std::string &name) { assignProperty(name, Org_Type_Company); }
 
     virtual ~Department() {}
 
-    virtual void insert(const std::shared_ptr<Organization> &c_spOrg) override {}
+    virtual void insert(const std::shared_ptr<Organization> &spOrg) override {}
 
-    virtual void erase(const std::string &c_name, const OrgType type) override {}
+    virtual void erase(const std::string &name, const OrgType type) override {}
 
     virtual void display() override { std::cout << "Department : " << Organization::name() << std::endl; }
 };
@@ -68,10 +68,10 @@ class Company : public Organization
 {
 private:
     typedef std::list<std::weak_ptr<Organization>> ListOrg;
-    ListOrg _lsOrg;
+    ListOrg lsOrg_;
 
 public:
-    Company(const std::string &c_name) { assignProperty(c_name, Org_Type_Company); }
+    Company(const std::string &name) { assignProperty(name, Org_Type_Company); }
     virtual ~Company() {}
 
     virtual void insert(const std::shared_ptr<Organization> &c_spOrg) override
@@ -80,25 +80,25 @@ public:
         {
         case Org_Type_Company:
         case Org_Type_Department:
-            _lsOrg.emplace_back(c_spOrg);
+            lsOrg_.emplace_back(c_spOrg);
             break;
         default:
             break;
         }
     }
 
-    virtual void erase(const std::string &c_name, const OrgType c_type) override
+    virtual void erase(const std::string &name, const OrgType type) override
     {
-        _lsOrg.erase(std::remove_if(_lsOrg.begin(), _lsOrg.end(), [&](const std::weak_ptr<Organization> &wpOrg)
-                                    { return wpOrg.lock()->name() == c_name && wpOrg.lock()->type() == c_type; }),
-                     _lsOrg.end());
+        lsOrg_.erase(std::remove_if(lsOrg_.begin(), lsOrg_.end(), [&](const std::weak_ptr<Organization> &wpOrg)
+                                    { return wpOrg.lock()->name() == name && wpOrg.lock()->type() == type; }),
+                     lsOrg_.end());
     }
 
     virtual void display() override
     {
         std::cout << "Company : " << name() << std::endl;
 
-        std::for_each(_lsOrg.begin(), _lsOrg.end(), [&](const std::weak_ptr<Organization> &wpOrg)
+        std::for_each(lsOrg_.begin(), lsOrg_.end(), [&](const std::weak_ptr<Organization> &wpOrg)
                       {
             std::cout << Organization::name() << " => ";
             wpOrg.lock()->display(); });
@@ -107,10 +107,10 @@ public:
 
 int main()
 {
-    std::shared_ptr<Organization> spAlibaba{new Company{"Alibaba"}};
-    std::shared_ptr<Organization> spTmall{new Company{"Tmall"}};
-    std::shared_ptr<Organization> spDevelopment{new Department{"Development"}};
-    std::shared_ptr<Organization> spTest{new Department{"Test"}};
+    std::shared_ptr<Organization> spAlibaba = std::make_shared<Company>("Alibaba");
+    std::shared_ptr<Organization> spTmall = std::make_shared<Company>("Tmall");
+    std::shared_ptr<Organization> spDevelopment = std::make_shared<Department>("Development");
+    std::shared_ptr<Organization> spTest = std::make_shared<Department>("Test");
 
     spAlibaba->insert(spTmall);
     spAlibaba->insert(spDevelopment);

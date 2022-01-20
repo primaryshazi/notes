@@ -6,85 +6,83 @@
 
 class Computer
 {
-private:
-    std::string _name;
-    size_t _size;
-    std::string _type;
-
 public:
-    Computer(const std::string &c_name, const size_t &c_size, const std::string &c_type)
-        : _name(c_name), _size(c_size), _type(c_type) {}
+    Computer(const std::string &name, const size_t &size, const std::string &type)
+        : name_(name), size_(size), type_(type) {}
     ~Computer() {}
 
-    std::string name() const { return _name; }
+    std::string name() const { return name_; }
 
-    size_t size() const { return _size; }
+    size_t size() const { return size_; }
 
-    std::string type() const { return _type; }
+    std::string type() const { return type_; }
 
-    friend std::ostream &operator<<(std::ostream &os, const Computer &c_computer)
+    friend std::ostream &operator<<(std::ostream &os, const Computer &computer)
     {
-        os << "[NAME => " << c_computer._name << "]  [SIZE => " << c_computer._size
-            << "]  [TYPE => " << c_computer._type << "]";
+        os << "[NAME => " << computer.name_ << "]  [SIZE => " << computer.size_
+           << "]  [TYPE => " << computer.type_ << "]";
 
         return os;
     }
+
+private:
+    std::string name_;
+    size_t size_;
+    std::string type_;
 };
 
 class Standard
 {
 public:
-    virtual std::list<Computer> acquire(const std::list<Computer> &c_lsPC) = 0;
+    virtual std::list<Computer> acquire(const std::list<Computer> &lsPC) = 0;
 };
 
 class SizeStd : public Standard
 {
-private:
-    size_t _size;
-
 public:
-    SizeStd(const size_t c_size) : _size(c_size) {}
+    SizeStd(const size_t size) : size_(size) {}
 
     virtual ~SizeStd() {}
 
-    virtual std::list<Computer> acquire(const std::list<Computer> &c_lsPC) override
+    virtual std::list<Computer> acquire(const std::list<Computer> &lsPC) override
     {
-        std::list<Computer> lsPC;
+        std::list<Computer> result;
 
-        std::copy_if(c_lsPC.cbegin(), c_lsPC.cend(), std::back_inserter(lsPC), [this](const Computer &c_PC) {
-            return c_PC.size() == this->_size;
-            });
+        std::copy_if(lsPC.cbegin(), lsPC.cend(), std::back_inserter(result), [this](const Computer &pc)
+                     { return pc.size() == this->size_; });
 
-        return lsPC;
+        return result;
     }
+
+private:
+    size_t size_;
 };
 
 class TypeStd : public Standard
 {
-private:
-    std::string _type;
-
 public:
-    TypeStd(const std::string &c_type) : _type(c_type) {}
+    TypeStd(const std::string &type) : type_(type) {}
+
     virtual ~TypeStd() {}
 
-    virtual std::list<Computer> acquire(const std::list<Computer> &c_lsPC) override
+    virtual std::list<Computer> acquire(const std::list<Computer> &lsPC) override
     {
-        std::list<Computer> lsPC;
+        std::list<Computer> result;
 
-        std::copy_if(c_lsPC.cbegin(), c_lsPC.cend(), std::back_inserter(lsPC), [this](const Computer &c_PC) {
-            return c_PC.type() == this->_type;
-            });
+        std::copy_if(lsPC.cbegin(), lsPC.cend(), std::back_inserter(result), [this](const Computer &pc)
+                     { return pc.type() == this->type_; });
 
-        return lsPC;
+        return result;
     }
+
+private:
+    std::string type_;
 };
 
-std::ostream &operator<<(std::ostream &os, const std::list<Computer> &c_lsPC)
+std::ostream &operator<<(std::ostream &os, const std::list<Computer> &lsPC)
 {
-    std::for_each(c_lsPC.cbegin(), c_lsPC.cend(), [&](const Computer &c_PC) {
-        os << c_PC << std::endl;
-        });
+    std::for_each(lsPC.cbegin(), lsPC.cend(), [&](const Computer &pc)
+                  { os << pc << std::endl; });
 
     return os;
 }
@@ -94,7 +92,7 @@ int main()
     std::list<Computer> lsPC{
         {"MacBook", 16, "Office"},
         {"MateBook", 14, "Office"},
-        {"Lenovo", 14, "Game"} };
+        {"Lenovo", 14, "Game"}};
 
     SizeStd sStd(14);
     TypeStd tStd("Office");
@@ -110,9 +108,9 @@ int main()
      *
      */
     std::cout << "SIZE STD : 14" << std::endl
-        << sStd.acquire(lsPC) << std::endl;
+              << sStd.acquire(lsPC) << std::endl;
     std::cout << "TYPE STD : Office" << std::endl
-        << tStd.acquire(lsPC) << std::endl;
+              << tStd.acquire(lsPC) << std::endl;
 
     return 0;
 }
