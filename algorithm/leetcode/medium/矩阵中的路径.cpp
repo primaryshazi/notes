@@ -66,7 +66,7 @@ int main()
     std::string two = "AEIJOPLH";
 
     std::cout << exist(board, one) << std::endl;
-    std::cout << exist(board, two);
+    std::cout << exist(board, two) << std::endl;
 
     return 0;
 }
