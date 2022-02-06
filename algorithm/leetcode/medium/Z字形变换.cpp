@@ -9,28 +9,29 @@ std::string convert(const std::string &s, int numRows)
         return s;
     }
 
-    std::vector<std::string> rowStr(std::min(numRows, int(s.size())));    // 记录排列之后的每行的字符
-    int curRow = 0;
-    bool isDown = false;
+    // 记录重拍之后每一行的字符
+    std::vector<std::string> rowStr(std::min(numRows, static_cast<int>(s.size())));
+    int cur = 0;            // 记录当前行
+    bool isDown = false;    // 是否转向
 
     for (auto c : s)
     {
-        rowStr[curRow] += c;
-        // 当前行为第一行或者最后一行时，调转反向
-        if (curRow == 0 || curRow == numRows - 1)
+        rowStr[cur] += c;
+        // 第一行或者最后一行时需要转向
+        if (cur == 0 || cur == numRows - 1)
         {
             isDown = !isDown;
         }
-        curRow += isDown ? 1 : -1;
+        cur += isDown ? 1 : -1;
     }
 
-    std::string ret;
-    for (auto row : rowStr)
+    std::string result;
+    for (auto &str : rowStr)
     {
-        ret += row;
+        result += str;
     }
 
-    return ret;
+    return result;
 }
 
 int main()
