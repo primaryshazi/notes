@@ -1,37 +1,44 @@
 #include <iostream>
 #include <vector>
-#include <unordered_set>
+#include <algorithm>
 
 int longestConsecutive(std::vector<int> &nums)
 {
-    std::unordered_set<int> unorder;
-
-    for (auto i : nums)
+    int len = static_cast<int>(nums.size());
+    if (len < 2)
     {
-        unorder.emplace(i);
+        return len;
     }
 
-    int maxLen = 0;
-    for (auto i : nums)
+    std::sort(nums.begin(), nums.end());
+
+    int longest = 1;
+    int cur = 1;
+    for (int i = 1; i != len; ++i)
     {
-        // 当i-1存在时，则在计算i-1时就会计算到i，可以跳过
-        if (unorder.count(i - 1) == 0)
+        /**
+         * 重复数字则予以跳过
+         * 连续数字则加1
+         * 非连续数字则重新计数
+         */
+        if (nums[i] == nums[i - 1])
         {
-            int curLen = 1;
-
-            // 当i+1存在时则继续查找
-            while (unorder.count(i + 1) > 0)
-            {
-                i++;
-                curLen++;
-            }
-
-            maxLen = std::max(curLen, maxLen);
+            continue;
+        }
+        if (nums[i] == nums[i - 1] + 1)
+        {
+            cur++;
+        }
+        else
+        {
+            longest = std::max(longest, cur);
+            cur = 1;
         }
     }
 
-    return maxLen;
+    return std::max(longest, cur);
 }
+
 
 int main()
 {
