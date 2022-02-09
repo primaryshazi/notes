@@ -3,7 +3,7 @@
 
 int myAtoi(const std::string &s)
 {
-    int result = 0;
+    int64_t result = 0;
     int sign = 0;   // 标记正负数，无符号位时默认为正数
 
     for (auto ch : s)
@@ -30,15 +30,18 @@ int myAtoi(const std::string &s)
             {
                 sign = 1;
             }
-            int64_t tmp = static_cast<int64_t>(result) * 10 + ch - '0';
+            result = result * 10 + sign * (ch - '0');
 
-            if (tmp > INT_MAX)
+            if (result > INT_MAX)
             {
-                result = sign == 1 ? INT_MAX : INT_MIN;
-                sign = 1;
+                result = INT_MAX;
                 break;
             }
-            result = tmp;
+            if (result < INT_MIN)
+            {
+                result = INT_MIN;
+                break;
+            }
         }
         else
         {
@@ -46,7 +49,7 @@ int myAtoi(const std::string &s)
         }
     }
 
-    return sign * result;
+    return result;
 }
 
 int main()

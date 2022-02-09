@@ -10,7 +10,7 @@ int searchInsert(const std::vector<int> &nums, int target)
 
     while (left <= right)
     {
-        int mid = ((right - left) >> 1) + left;
+        int mid = (right + left) >> 1;
 
         if (target <= nums[mid])
         {

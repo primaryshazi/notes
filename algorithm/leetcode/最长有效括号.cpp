@@ -17,11 +17,11 @@ int longestValidParentheses(const std::string &s)
         else
         {
             stk.pop();
+
             /**
              * 若栈已空，则推入当前位置作为起始点
              * 若栈未空，则计算最大长度
              */
-
             if (stk.empty())
             {
                 stk.push(i);

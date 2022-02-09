@@ -4,26 +4,28 @@
 
 void nextPermutation(std::vector<int> &nums)
 {
-    // 从后向前找到第一个小于右值的数
-    int left = nums.size() - 2;
+    int left = static_cast<int>(nums.size()) - 2;
+
+    // 从后向前找到第一个递减的数字
     while (left >= 0 && nums[left] >= nums[left + 1])
     {
         --left;
     }
-    /**
-     * 找到则进行右子数组处理后反转子数组
-     * 未找到则直接反转整个数组
-     */
+
     if (left >= 0)
     {
-        // 从后向前找到第一个大于left索引的数，与之交换，形成从left + 1开始的递减序列
-        int right = nums.size() - 1;
+        int right = static_cast<int>(nums.size()) - 1;
+
+        // 从后向前找到第一个比递减数字大的数字
         while (right >= 0 && nums[left] >= nums[right])
         {
             --right;
         }
+        // 交互需要替换的两数
         std::swap(nums[left], nums[right]);
     }
+
+    // left右边的序列由降序调整为升序
     std::reverse(nums.begin() + left + 1, nums.end());
 }
 

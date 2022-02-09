@@ -21,9 +21,11 @@ void letterCombinationsCore(const std::string &digits, size_t index, std::string
         result.emplace_back(combine);
         return;
     }
-    char digit = digits[index];
-    auto &str = phoneButton.at(digit);
 
+    char ch = digits[index];        // 数字
+    auto &str = phoneButton.at(ch); // 数字所对应的字符串
+
+    // 递归拼接字符串
     for (auto ch : str)
     {
         combine.push_back(ch);
