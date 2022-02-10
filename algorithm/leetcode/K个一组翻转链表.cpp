@@ -13,41 +13,48 @@ struct ListNode
 
 std::pair<ListNode *, ListNode *> reverseGroup(ListNode *head, ListNode *tail)
 {
-    // 将head的每一个节点放置于p节点之前
-    ListNode *p = tail->next;
-    ListNode *h = head;
-    while (p != tail)
+    ListNode *first = head;
+    ListNode *last = tail->next;
+
+    // 从first节点开始依次将节点插入到last之前
+    while (last != tail)
     {
-        ListNode *n = h->next;
-        h->next = p;
-        p = h;
-        h = n;
+        ListNode *next = first->next;   // 记录下一个需要插入的节点
+        first->next = last;
+        last = first;
+        first = next;
     }
+
     return { tail, head };
 }
 
 ListNode *reverseKGroup(ListNode *head, int k)
 {
-    ListNode *hair = new ListNode(0);
-    hair->next = head;
-    ListNode *pre = hair;   // 记录反转组的前置节点
+    ListNode *hair = new ListNode(0, head);
+    ListNode *prev = hair;   // 记录反转组的前置节点
 
-    while (head) {
-        ListNode *tail = pre;
-        // 查看剩余部分长度是否大于等于 k
-        for (int i = 0; i < k; ++i) {
+    while (head)
+    {
+        ListNode *tail = prev;
+
+        // 找到需要反转组的最后一个节点
+        for (int i = 0; i < k; ++i)
+        {
             tail = tail->next;
-            if (!tail) {
+            if (nullptr == tail)
+            {
                 return hair->next;
             }
         }
-        ListNode *nex = tail->next; // 反转组的后置节点
-        // 反转这一组
+
+        ListNode *next = tail->next;    // 反转组后置节点
         std::tie(head, tail) = reverseGroup(head, tail);
-        pre->next = head;   // 将前置节点指向反转之后的组头
-        tail->next = nex;   // 将组尾下一个执行后置节点
-        pre = tail;         // 前置节点从组尾开始
-        head = tail->next;  // 组头节点置为组尾节点
+
+        // 将反转之后的组与组的前置节点和后置节点衔接
+        prev->next = head;
+        tail->next = next;
+        prev = tail;
+        head = prev->next;
     }
 
     return hair->next;

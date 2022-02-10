@@ -8,34 +8,36 @@ public:
 
     void appendTail(int value)
     {
-        in_.push(value);
+        tail_.push(value);
     }
 
     int deleteHead()
     {
-        // 当出栈未空时，将入栈中的元素均置于出栈中
-        if (out_.empty())
+        // 当头栈为空时，将尾栈中的元素均置于出栈中
+        if (head_.empty())
         {
-            while (!in_.empty())
+            while (!tail_.empty())
             {
-                out_.push(in_.top());
-                in_.pop();
+                head_.push(tail_.top());
+                tail_.pop();
             }
         }
 
-        if (out_.empty())
+        // 无数据则直接返回
+        if (head_.empty())
         {
             return -1;
         }
 
-        int value = out_.top();
-        out_.pop();
+        int value = head_.top();
+        head_.pop();
+
         return value;
     }
 
 private:
-    std::stack<int> in_;
-    std::stack<int> out_;
+    std::stack<int> tail_;
+    std::stack<int> head_;
 };
 
 int main()

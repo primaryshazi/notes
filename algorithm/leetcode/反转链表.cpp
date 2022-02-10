@@ -11,30 +11,7 @@ ListNode *reverseList(ListNode *head)
     ListNode *prev = nullptr;
     ListNode *cur = head;
 
-    /**
-     * 将head每一个元素放置于prev之前
-     *
-     * A -> B -> C -> null
-     * prev = null  cur = A
-     *
-     *
-     * next = B
-     * A -> null
-     * prev = A
-     * cur = B
-     *
-     * prev = A -> null
-     * cur = B
-     *
-     *
-     * next = C
-     * B -> A
-     * prev = B
-     * cur = C
-     *
-     * prev = B -> A -> null
-     * cur = C
-     */
+    // 从链表中依次解出节点倒置以prev相指
     while (cur != nullptr)
     {
         ListNode *next = cur->next;

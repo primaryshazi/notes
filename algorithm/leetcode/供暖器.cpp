@@ -15,7 +15,7 @@ int findRadius(std::vector<int> &houses, std::vector<int> &heaters)
         auto index = std::upper_bound(heaters.begin(), heaters.end(), pos) - heaters.begin();
         // 距离右边喷头的距离
         int right = index >= heaterLen ? INT_MAX : heaters[index] - pos;
-        // 距离左边喷头的具体
+        // 距离左边喷头的距离
         int left = index > 0 ? pos - heaters[index - 1] : INT_MAX;
         minRadius = std::max(std::min(right, left), minRadius);
     }

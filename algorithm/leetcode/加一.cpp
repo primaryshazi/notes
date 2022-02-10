@@ -7,6 +7,7 @@ std::vector<int> plusOne(const std::vector<int> &digits)
     int index = length - 1;
     std::vector<int> result;
 
+    // 从右边起第一不为9的值，将此值加1，右边的9均置为0
     while (index >= 0 && digits[index] == 9)
     {
         index--;

@@ -4,8 +4,8 @@
 
 std::vector<std::vector<int>> merge(std::vector<std::vector<int>> &intervals)
 {
-    int n = static_cast<int>(intervals.size());
-    if (n <= 1)
+    int length = static_cast<int>(intervals.size());
+    if (length < 2)
     {
         return intervals;
     }
@@ -15,23 +15,20 @@ std::vector<std::vector<int>> merge(std::vector<std::vector<int>> &intervals)
     std::vector<std::vector<int>> result;
     int pos = 0;    // 记录当前区间
 
-    while (pos < n)
+    while (pos < length)
     {
-        int right = intervals[pos][1];  // 当前区间右边界
-        int next = pos + 1;             // 下一待合并区间
+        int left = intervals[pos][0];   // 区间的左值
+        int right = intervals[pos][1];  // 区间的右值
+        int next = pos + 1;             // 记录带合并区间
 
-        // 若下一区间的左边界小于等于当前区间右边界，则持续合并至当前区间
-        while (next < n && intervals[next][0] <= right)
+        // 若下一个区间的左值不大于当前区间的右值，则两个区间可以合并
+        while (next < length && intervals[next][0] <= right)
         {
-            // 合并后的右边界取最大值
-            right = std::max(right, intervals[next][1]);
-            next++;
+            right = intervals[next][1];
+            ++next;
         }
-
-        // 将合并完成的当前区间存入
-        result.emplace_back(std::vector<int>{ intervals[pos][0], right });
-        // 从下一个待合并的区间开始
         pos = next;
+        result.emplace_back(std::vector<int>{ left, right });
     }
 
     return result;

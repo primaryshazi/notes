@@ -30,7 +30,9 @@ TreeNode *buildTree(const std::vector<int> &nums, int left, int right)
 
 TreeNode *sortedArrayToBST(const std::vector<int> &nums)
 {
-    return buildTree(nums, 0, nums.size() - 1);
+    int length = static_cast<int>(nums.size());
+
+    return buildTree(nums, 0, length - 1);
 }
 
 void printTree(TreeNode *root)

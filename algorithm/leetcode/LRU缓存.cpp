@@ -14,12 +14,22 @@ class LRUCache
 {
 public:
     LRUCache() : LRUCache(10) {}
-    LRUCache(int capacity) : capacity_(capacity), size_(0)
+
+    LRUCache(int capacity) : capacity_(capacity)
     {
         head_ = new LinkNode();
         tail_ = new LinkNode();
         head_->next = tail_;
         tail_->prev = head_;
+    }
+
+    ~LRUCache()
+    {
+        for (auto &c : cache_)
+        {
+            delete c.second;
+            c.second = nullptr;
+        }
     }
 
     int get(int key)
@@ -28,35 +38,33 @@ public:
         {
             return -1;
         }
+
+        // 将访问的节点移动到头部
         LinkNode *node = cache_[key];
         moveToHead(node);
-
         return node->value;
     }
 
     void put(int key, int value)
     {
-        /**
-         * 无此key则新增节点至头部，超限则移除尾部节点
-         * 有key则更新值并移动至头部
-         */
         if (cache_.count(key) == 0)
         {
+            // 新建节点将节点并添加到头部
             LinkNode *node = new LinkNode(key, value);
             cache_[key] = node;
             addToHead(node);
-            ++size_;
 
-            if (size_ > capacity_)
+            // 若超过容量最删除尾部节点
+            if (cache_.size() > capacity_)
             {
-                LinkNode *lastNode = removeTail();
-                cache_.erase(lastNode->key);
-                delete lastNode;
-                --size_;
+                LinkNode *last = removeTail();
+                cache_.erase(last->key);
+                delete last;
             }
         }
         else
         {
+            // 修改节点值并将节点移动至头部
             LinkNode *node = cache_[key];
             node->value = value;
             moveToHead(node);
@@ -64,11 +72,6 @@ public:
     }
 
 private:
-    /**
-     * @brief 将节点添加至头部
-     *
-     * @param node
-     */
     void addToHead(LinkNode *node)
     {
         node->prev = head_;
@@ -77,22 +80,18 @@ private:
         head_->next = node;
     }
 
-    /**
-     * @brief 将节点移动至头部
-     *
-     * @param node
-     */
+    void removeNode(LinkNode *node)
+    {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+    }
+
     void moveToHead(LinkNode *node)
     {
         removeNode(node);
         addToHead(node);
     }
 
-    /**
-     * @brief 返回待删除的尾部节点
-     *
-     * @return LinkNode*
-     */
     LinkNode *removeTail()
     {
         LinkNode *tmp = tail_->prev;
@@ -100,43 +99,31 @@ private:
         return tmp;
     }
 
-    /**
-     * @brief 移除节点
-     *
-     * @param node
-     */
-    void removeNode(LinkNode *node)
-    {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-    }
-
 private:
     std::unordered_map<int, LinkNode *> cache_; // 缓存key -> node
-    LinkNode *head_;                            // 记录node访问时间顺序
-    LinkNode *tail_;
-    int capacity_;
-    int size_;
+    LinkNode *head_;                            // 记录node访问时间顺序之头
+    LinkNode *tail_;                            // 记录node访问时间顺序之尾
+    size_t capacity_;                           // 最大容量
 };
 
 int main()
 {
-    LRUCache cache;
+    LRUCache cache(5);
     for (int i = 0; i < 10; i++)
     {
         cache.put(i, i * i);
     }
 
     /**
-     * => 0
-     * => 4
-     * => 16
-     * => 36
-     * => 64
+     * => 0  -1
+     * => 2  -1
+     * => 4  -1
+     * => 6  36
+     * => 8  64
      */
     for (int i = 0; i < 10; i += 2)
     {
-        std::cout << cache.get(i) << std::endl;
+        std::cout << i << "  " << cache.get(i) << std::endl;
     }
 
     return 0;
