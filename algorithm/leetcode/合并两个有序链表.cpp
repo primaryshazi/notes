@@ -11,9 +11,9 @@ struct ListNode
 
 ListNode *mergeSortList(ListNode *l1, ListNode *l2)
 {
-    ListNode *head = new ListNode(0);
+    ListNode head;
 
-    ListNode *prev = head;
+    ListNode *prev = &head;
     while (l1 != nullptr && l2 != nullptr)
     {
         if (l1->val < l2->val)
@@ -31,7 +31,7 @@ ListNode *mergeSortList(ListNode *l1, ListNode *l2)
     // 最后至少有一个为空，将非空者接入尾部
     prev->next = l1 == nullptr ? l2 : l1;
 
-    return head->next;
+    return head.next;
 }
 
 void printList(ListNode *list)
