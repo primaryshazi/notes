@@ -1,25 +1,30 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
-std::vector<std::vector<int>> merge(std::vector<std::vector<int>> &intervals)
+std::vector<std::vector<int>> insert(std::vector<std::vector<int>> &intervals, std::vector<int> &newInterval)
 {
-    int length = static_cast<int>(intervals.size());
-    if (length < 2)
+    if (intervals.empty())
     {
-        return intervals;
+        return { newInterval };
     }
 
-    std::sort(intervals.begin(), intervals.end());
+    // 将新加入的插入到合适的位置
+    auto it = intervals.begin();
+    while (it != intervals.end() && newInterval[0] >= (*it)[0])
+    {
+        ++it;
+    }
+    intervals.emplace(it, newInterval);
 
     std::vector<std::vector<int>> result;
     int pos = 0;    // 记录当前区间
+    int length = static_cast<int>(intervals.size());
 
     while (pos < length)
     {
         int left = intervals[pos][0];   // 区间的左值
         int right = intervals[pos][1];  // 区间的右值
-        int next = pos + 1;             // 记录待合并区间
+        int next = pos + 1;             // 记录带合并区间
 
         // 若下一个区间的左值不大于当前区间的右值，则两个区间可以合并
         while (next < length && intervals[next][0] <= right)
@@ -53,20 +58,13 @@ std::ostream &operator<<(std::ostream &os, const std::vector<T> &v)
 
 int main()
 {
-    std::vector<std::vector<int>> intervals = {
-        {2, 3},
-        {2, 2},
-        {3, 3},
-        {1, 3},
-        {5, 7},
-        {2, 2},
-        {4, 6}
-    };
+    std::vector<std::vector<int>> intervals = { { 1, 2}, { 3, 5 }, { 6, 7 }, { 8, 10 }, { 12, 16 } };
+    std::vector<int> newVal = { 4, 8 };
 
     /**
-     * => { { 1, 3 }, { 4, 7 } }
+     * => { { 1, 2 }, { 3, 10 }, { 12, 16 } }
      */
-    std::cout << merge(intervals) << std::endl;
+    std::cout << insert(intervals, newVal) << std::endl;
 
     return 0;
 }
