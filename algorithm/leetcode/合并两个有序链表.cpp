@@ -40,7 +40,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -67,28 +67,9 @@ int main()
     }
 
     /**
-     * => 0
-     * => 1
-     * => 3
-     * => 5
-     * => 7
-     * => 9
-     *
-     * => 0
-     * => 1
-     * => 4
-     * => 7
-     *
-     * => 0
-     * => 0
-     * => 1
-     * => 1
-     * => 3
-     * => 4
-     * => 5
-     * => 7
-     * => 7
-     * => 9
+     * => 0 1 3 5 7 9
+     * => 0 1 4 7
+     * => 0 0 1 1 3 4 5 7 7 9
      */
     printList(list1);
     printList(list2);

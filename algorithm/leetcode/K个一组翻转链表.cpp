@@ -66,7 +66,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -85,16 +85,7 @@ int main()
     list = reverseKGroup(list, 3);
 
     /**
-     * => 2
-     * => 1
-     * => 0
-     * => 5
-     * => 4
-     * => 3
-     * => 8
-     * => 7
-     * => 6
-     * => 9
+     * => 2 1 0 5 4 3 8 7 6 9
      */
     printList(list);
 

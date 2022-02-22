@@ -44,7 +44,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -63,11 +63,7 @@ int main()
     }
 
     /**
-     * => 1
-     * => 0
-     * => 3
-     * => 2
-     * => 4
+     * => 1 0 3 2 4
      */
     printList(swapPairs(list));
 

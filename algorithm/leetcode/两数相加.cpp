@@ -58,7 +58,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -79,11 +79,7 @@ int main()
     ListNode *l3 = addTwoNumbers(l1, l2);
 
     /**
-     * => 3
-     * => 7
-     * => 1
-     * => 6
-     * => 1
+     * => 3 7 1 6 1
      */
     printList(l3);
 

@@ -29,7 +29,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -44,17 +44,8 @@ int main()
     list->next->next->next->next = new ListNode(4);
 
     /**
-     * => 0
-     * => 1
-     * => 2
-     * => 3
-     * => 4
-     * =>
-     * => 4
-     * => 3
-     * => 2
-     * => 1
-     * => 0
+     * => 0 1 2 3 4
+     * => 4 3 2 1 0
      */
     printList(list);
     list = reverseList(list);

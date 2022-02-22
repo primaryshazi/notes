@@ -63,7 +63,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -82,15 +82,7 @@ int main()
     }
 
     /**
-     * => 0
-     * => 1
-     * => 2
-     * => 3
-     * => 4
-     * => 6
-     * => 7
-     * => 8
-     * => 9
+     * => 0 1 2 3 4 6 7 8 9
      */
     printList(removeNthFromEnd(list, 5));
 

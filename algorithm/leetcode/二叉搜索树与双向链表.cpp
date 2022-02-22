@@ -72,7 +72,7 @@ void printNode(Node *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->right;
         if (node == list)
         {
@@ -97,15 +97,7 @@ int main()
     root = treeToDoublyList(root);
 
     /**
-     * => 1
-     * => 2
-     * => 3
-     * => 4
-     * => 5
-     * => 6
-     * => 7
-     * => 8
-     * => 9
+     * => 1 2 3 4 5 6 7 8 9
      */
     printNode(root);
 

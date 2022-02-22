@@ -66,7 +66,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -103,19 +103,7 @@ int main()
     std::vector<ListNode *> lists = { list1, list2, list3 };
 
     /**
-     * => 0
-     * => 0
-     * => 0
-     * => 1
-     * => 1
-     * => 1
-     * => 3
-     * => 4
-     * => 5
-     * => 6
-     * => 7
-     * => 7
-     * => 9
+     * => 0 0 0 1 1 1 3 4 5 6 7 7 9
      */
     printList(mergeKLists(lists));
 

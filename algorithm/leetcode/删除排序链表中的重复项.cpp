@@ -42,7 +42,7 @@ void printList(ListNode *list)
 
     while (nullptr != node)
     {
-        std::cout << node->val << std::endl;
+        std::cout << node->val << " ";
         node = node->next;
     }
     std::cout << std::endl;
@@ -61,30 +61,14 @@ int main()
     }
 
     /**
-     * => 0
-     * => 1
-     * => 2
-     * => 4
-     * => 4
-     * => 5
-     * => 7
-     * => 7
-     * => 8
-     * => 10
+     * => 0 1 2 4 4 5 7 7 8 10
      */
     printList(list);
 
     list = deleteDuplicates(list);
 
     /**
-     * => 0
-     * => 1
-     * => 2
-     * => 4
-     * => 5
-     * => 7
-     * => 8
-     * => 10
+     * => 0 1 2 4 5 7 8 10
      */
     printList(list);
 

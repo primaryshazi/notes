@@ -33,7 +33,7 @@ void printTree(TreeNode *root)
         if (nullptr != node)
         {
             inorder(node->left);
-            std::cout << node->val << std::endl;
+            std::cout << node->val << " ";
             inorder(node->right);
         }
     };
@@ -53,26 +53,14 @@ int main()
     root->right->right = new TreeNode(8);
 
     /**
-     * => 2
-     * => 3
-     * => 4
-     * => 5
-     * => 6
-     * => 7
-     * => 8
+     * => 2 3 4 5 6 7 8
      */
     printTree(root);
 
     root = invertTree(root);
 
     /**
-     * => 8
-     * => 7
-     * => 6
-     * => 5
-     * => 4
-     * => 3
-     * => 2
+     * => 8 7 6 5 4 3 2
      */
     printTree(root);
 
