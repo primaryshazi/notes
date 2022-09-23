@@ -11,3 +11,6 @@ class B {
         console.log("B.print()")
     }
 }
+
+export { B }
+export { B as BRef }
