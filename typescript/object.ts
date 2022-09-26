@@ -1,10 +1,10 @@
 var v1 = {
     i: 0,
-    str: "",
+    str: '',
     func: function () { }
 }
 v1.i = 1024;
-v1.str = "hello world"
+v1.str = 'hello world'
 v1.func = function () { console.log(this.i, this.str) }
 
 var v2 = {
@@ -25,7 +25,7 @@ type Value = {
 }
 let v3: Value = {
     n: 999,
-    s: "999",
+    s: '999',
     func: function (): void {
         console.log(this.n, this.s)
     }

@@ -53,7 +53,7 @@ let c = funcGeneric<number>(4096)
 
 let d = new ExtendsGeneric<number>().func(8192)
 
-let e = keyOfGeneric({ x: 16384, y: 32768 }, "x")
+let e = keyOfGeneric({ x: 16384, y: 32768 }, 'x')
 
 let f = create(Number, 65536)
 

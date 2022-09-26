@@ -4,22 +4,22 @@ interface Wiget {
 }
 
 class Handler {
-    name_: string = ""
+    name_: string = ''
 
     constructor(n: string) {
         this.name_ = n
     }
 
     dealClickStatic(type: number): void {
-        console.log(this.name_ + " deal click static " + type)
+        console.log(this.name_ + ' deal click static ' + type)
     }
 
     dealClickDynamic = (type: number) => {
-        console.log(this.name_ + " deal click dyanmic " + type)
+        console.log(this.name_ + ' deal click dyanmic ' + type)
     }
 
     dealClickBing(type: number): void {
-        console.log(this.name_ + " deal click bind " + type)
+        console.log(this.name_ + ' deal click bind ' + type)
     }
 }
 
@@ -38,7 +38,7 @@ let windows: Wiget = {
  => handler deal click dyanmic 2048
  => handler deal click bind 4096
  */
-let handler = new Handler("handler")
+let handler = new Handler('handler')
 windows.onClickEvent(handler.dealClickStatic, handler, 1024)
 windows.onClickEvent2(handler.dealClickDynamic, 2048)
 windows.onClickEvent2(handler.dealClickBing.bind(handler), 4096)

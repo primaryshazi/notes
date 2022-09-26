@@ -8,7 +8,7 @@ export class A {
 
 class B {
     print(): void {
-        console.log("B.print()")
+        console.log('B.print()')
     }
 }
 

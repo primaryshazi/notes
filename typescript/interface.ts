@@ -15,7 +15,7 @@ let num: InterfaceNum = {
 
 let func: InterfaceFunc = {
     print: function (...argv: any[]): void {
-        console.log(argv.join(" "))
+        console.log(argv.join(' '))
     }
 }
 
@@ -23,7 +23,7 @@ let num_func: InterfaceAny = {
     x: 2048,
     print: function (...argv: any[]): void {
         argv.push(this.x)
-        console.log(argv.join(" "))
+        console.log(argv.join(' '))
     }
 }
 

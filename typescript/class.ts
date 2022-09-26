@@ -6,7 +6,7 @@ class ClassA {
     }
 
     print(): void {
-        console.log(this.constructor.name + " => " + this.x)
+        console.log(this.constructor.name + ' => ' + this.x)
     }
 }
 
@@ -28,7 +28,7 @@ class CIB implements InterfaceB {
     }
 
     print() {
-        console.log(this.constructor.name + " => " + this.y)
+        console.log(this.constructor.name + ' => ' + this.y)
     }
 }
 
@@ -40,7 +40,7 @@ class CCA extends ClassA {
 }
 
 class C {
-    static S_STATIC_VALUE: string = "nothing"
+    static S_STATIC_VALUE: string = 'nothing'
 
     constructor(i: number, j: number, k: number) {
         this.x = i
@@ -61,14 +61,14 @@ class C {
 
     private z: number = 0
     private print3(): void {
-        console.log(this.constructor.name + " => " + this.x, this.y, this.z)
+        console.log(this.constructor.name + ' => ' + this.x, this.y, this.z)
     }
 }
 
 let v1: ICA = {
     x: 1024,
     print: function (): void {
-        console.log(this.constructor.name + " => " + this.x)
+        console.log(this.constructor.name + ' => ' + this.x)
     }
 }
 
