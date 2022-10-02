@@ -1,3 +1,8 @@
+/**
+ * interface: 着重描述数据结构
+ * type: 着重描述类型
+ */
+
 interface InterfaceNum {
     readonly x: number
 }
