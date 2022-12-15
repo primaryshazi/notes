@@ -118,9 +118,14 @@ namespace AStar
 					return false;
 				}
 
-				if (na == nullptr || na == nullptr)
+				if (nullptr == na)
 				{
 					return true;
+				}
+
+				if (nullptr == nb)
+				{
+					return false;
 				}
 
 				return *na < *nb;
