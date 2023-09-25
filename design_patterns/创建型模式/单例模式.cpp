@@ -27,7 +27,7 @@ int main()
     /**
      * => 1
      */
-    std::cout << (&singleOne == &singleOne) << std::endl;
+    std::cout << (&singleOne == &singleTwo) << std::endl;
 
     return 0;
 }
