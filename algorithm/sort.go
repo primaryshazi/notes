@@ -8,14 +8,17 @@ import (
 	"time"
 )
 
-type sortFunc func([]int)
+type SortFunc struct {
+	name string
+	fc   func([]int)
+}
 
 func generate(length int) []int {
-	rand.Seed(1024)
+	rand.Seed(time.Now().Unix())
 	arr := make([]int, length)
 
 	for i := 0; i < length; i++ {
-		arr[i] = rand.Intn(10000)
+		arr[i] = rand.Intn(0xffff)
 	}
 
 	return arr
@@ -298,25 +301,39 @@ func bucketSort(arr []int) {
 	}
 }
 
+func stdSort(arr []int) {
+	sort.Ints(arr)
+}
+
+func threeCompare[T any](flag bool, a T, b T) T {
+	if flag {
+		return a
+	}
+	return b
+}
+
 func main() {
-	sorts := make(map[string]sortFunc)
+	sorts := make([]SortFunc, 0)
 
-	sorts["bubbleSort"] = bubbleSort
-	sorts["selectSort"] = selectSort
-	sorts["insertSort"] = insertSort
-	sorts["shellSort"] = shellSort
-	sorts["heapSort"] = heapSort
-	sorts["mergeSort"] = mergeSort
-	sorts["quickSort"] = quickSort
-	sorts["countSort"] = countSort
-	sorts["radixSort"] = radixSort
-	sorts["bucketSort"] = bucketSort
+	sorts = append(sorts, SortFunc{"bubbleSort", bubbleSort})
+	sorts = append(sorts, SortFunc{"selectSort", selectSort})
+	sorts = append(sorts, SortFunc{"insertSort", insertSort})
+	sorts = append(sorts, SortFunc{"shellSort", shellSort})
+	sorts = append(sorts, SortFunc{"heapSort", heapSort})
+	sorts = append(sorts, SortFunc{"mergeSort", mergeSort})
+	sorts = append(sorts, SortFunc{"quickSort", quickSort})
+	sorts = append(sorts, SortFunc{"countSort", countSort})
+	sorts = append(sorts, SortFunc{"radixSort", radixSort})
+	sorts = append(sorts, SortFunc{"bucketSort", bucketSort})
+	sorts = append(sorts, SortFunc{"stdSort", stdSort})
 
-	for k, v := range sorts {
-		arr := generate(50000)
+	originalArray := generate(10000)
+	for _, sf := range sorts {
+		arr := make([]int, len(originalArray))
+		copy(arr, originalArray)
 		start := time.Now().UnixNano()
-		v(arr)
+		sf.fc(arr)
 		end := time.Now().UnixNano()
-		fmt.Printf("%10s %6.6f\n", k, float64(end-start)/1000000)
+		fmt.Printf("%15s %10.3f %10s\n", sf.name, float64(end-start)/1000000, threeCompare(sort.IntsAreSorted(arr), "true", "false"))
 	}
 }
