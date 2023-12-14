@@ -38,8 +38,9 @@ std::vector<int> generate(size_t num)
         return {};
     }
 
-    std::default_random_engine engine;
-    std::uniform_int_distribution<int> uniform(0, 10000);
+    std::random_device rd;
+    std::mt19937 engine(rd());
+    std::uniform_int_distribution<int> uniform(0, std::numeric_limits<int16_t>::max());
     std::vector<int> array(num, 0);
 
     for (size_t i = 0; i < num; ++i)
@@ -155,7 +156,8 @@ void heap_sort(std::vector<int> &array)
     }
 
     std::function<void(std::vector<int> &, index_type, index_type)> build_heap =
-        [&build_heap](std::vector<int> &array, index_type length, index_type index) {
+        [&build_heap](std::vector<int> &array, index_type length, index_type index)
+    {
         index_type father = index;
         index_type lchild = 2 * index + 1;
         index_type rchild = 2 * index + 2;
@@ -200,7 +202,8 @@ void merge_sort(std::vector<int> &array)
     std::vector<int> tmp(length);
 
     std::function<void(std::vector<int> &, index_type, index_type, index_type)> merge =
-        [&tmp](std::vector<int> &array, index_type left, index_type mid, index_type right) {
+        [&tmp](std::vector<int> &array, index_type left, index_type mid, index_type right)
+    {
         index_type lIdx = left;
         index_type rIdx = mid + 1;
         index_type index = 0;
@@ -235,7 +238,8 @@ void merge_sort(std::vector<int> &array)
         }
     };
     std::function<void(std::vector<int> &, index_type, index_type)> mg_sort =
-        [&merge, &mg_sort](std::vector<int> &array, index_type left, index_type right) {
+        [&merge, &mg_sort](std::vector<int> &array, index_type left, index_type right)
+    {
         if (left < right)
         {
             index_type mid = left + ((right - left) >> 1);
@@ -259,8 +263,9 @@ void quick_sort(std::vector<int> &array)
     std::default_random_engine engine(std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<index_type> uniform;
     std::function<index_type(std::vector<int> &, index_type, index_type)> partition =
-        [&engine, &uniform](std::vector<int> &array, index_type left, index_type right) -> index_type {
-        index_type stdIdx = uniform(engine, decltype(uniform)::param_type{ left, right });
+        [&engine, &uniform](std::vector<int> &array, index_type left, index_type right) -> index_type
+    {
+        index_type stdIdx = uniform(engine, decltype(uniform)::param_type{left, right});
         std::swap(array[right], array[stdIdx]);
 
         int standard = array[right];
@@ -278,7 +283,8 @@ void quick_sort(std::vector<int> &array)
         return index;
     };
     std::function<void(std::vector<int> &, index_type, index_type)> qc_sort =
-        [&partition, &qc_sort](std::vector<int> &array, index_type left, index_type right) {
+        [&partition, &qc_sort](std::vector<int> &array, index_type left, index_type right)
+    {
         if (left < right)
         {
             index_type index = partition(array, left, right);
@@ -392,33 +398,40 @@ void bucket_sort(std::vector<int> &array)
     }
 }
 
+void std_sort(std::vector<int> &array)
+{
+    std::sort(array.begin(), array.end());
+}
+
 int main()
 {
     try
     {
         std::vector<std::pair<std::string, std::function<void(std::vector<int> &)>>> vFunc = {
-            { VARIABLE_TO_STRING(bubble_sort), bubble_sort },
-            { VARIABLE_TO_STRING(select_sort), select_sort },
-            { VARIABLE_TO_STRING(insert_sort), insert_sort },
-            { VARIABLE_TO_STRING(shell_sort), shell_sort },
-            { VARIABLE_TO_STRING(heap_sort), heap_sort },
-            { VARIABLE_TO_STRING(merge_sort), merge_sort },
-            { VARIABLE_TO_STRING(quick_sort), quick_sort },
-            { VARIABLE_TO_STRING(count_sort), count_sort},
-            { VARIABLE_TO_STRING(radix_sort), radix_sort },
-            { VARIABLE_TO_STRING(bucket_sort), bucket_sort}
+            {VARIABLE_TO_STRING(bubble_sort), bubble_sort},
+            {VARIABLE_TO_STRING(select_sort), select_sort},
+            {VARIABLE_TO_STRING(insert_sort), insert_sort},
+            {VARIABLE_TO_STRING(shell_sort), shell_sort},
+            {VARIABLE_TO_STRING(heap_sort), heap_sort},
+            {VARIABLE_TO_STRING(merge_sort), merge_sort},
+            {VARIABLE_TO_STRING(quick_sort), quick_sort},
+            {VARIABLE_TO_STRING(count_sort), count_sort},
+            {VARIABLE_TO_STRING(radix_sort), radix_sort},
+            {VARIABLE_TO_STRING(bucket_sort), bucket_sort},
+            {VARIABLE_TO_STRING(std_sort), std_sort},
         };
 
+        const auto original_array = generate(10000);
         for (auto &func : vFunc)
         {
-            auto array = generate(20000);
+            auto array = original_array;
             int64_t start = std::chrono::high_resolution_clock::now().time_since_epoch().count();
             func.second(array);
             int64_t end = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
-            std::cout << std::setw(12) << std::right << func.first << std::setw(15) << std::right << std::fixed
-                << static_cast<double>(end - start) / 1000000 << std::setw(8) << std::right
-                << (std::is_sorted(array.begin(), array.end()) ? "true" : "false") << std::endl;
+            std::cout << std::setw(12) << std::right << func.first << std::setw(15) << std::right << std::fixed << std::setprecision(3)
+                      << static_cast<double>(end - start) / 1000000 << std::setw(8) << std::right
+                      << (std::is_sorted(array.begin(), array.end()) ? "true" : "false") << std::endl;
         }
     }
     catch (const std::exception &e)
