@@ -4,11 +4,11 @@ DIR_PATH = (os.getcwd() + "/sz_dir").replace("\\", "/")
 
 
 # 递归获取所有文件和文件夹
-def listFullPathRecursion(path: str) -> []:
+def listFullPathRecursion(path: str) -> list[str]:
     if not os.path.exists(path):
         return []
 
-    fullpaths = []
+    fullpaths: list[str] = []
     if os.path.isdir(path):
         dirs = os.listdir(path)
         for dirPath in dirs:
