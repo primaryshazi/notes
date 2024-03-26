@@ -10,7 +10,7 @@ data = pandas.read_csv(FILE_NAME)
 
 # => ['name', 'score', 'comment']
 # => (3, 3)
-3
+# => 3
 # => [['a' 8.0 'NULL']
 # =>  ['b' 9.5 'NULL']
 # =>  ['c' 9.0 'NULL']]
