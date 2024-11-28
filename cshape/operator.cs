@@ -18,7 +18,7 @@ namespace shazi
 			return x * y;
 		}
 
-		public static Rect operator+ (Rect a, Rect b)
+		public static Rect operator +(Rect a, Rect b)
 		{
 			var r = new Rect();
 			r.x = a.x + b.x;
@@ -26,7 +26,7 @@ namespace shazi
 			return r;
 		}
 
-		public static Rect operator- (Rect a, Rect b)
+		public static Rect operator -(Rect a, Rect b)
 		{
 			var r = new Rect();
 			r.x = a.x - b.x;
@@ -46,8 +46,6 @@ namespace shazi
 			 * 128 16
 			 */
 			Console.WriteLine("{0} {1}", (a + b).area(), (a - b).area());
-
-			Console.ReadKey();
 		}
 	}
 }

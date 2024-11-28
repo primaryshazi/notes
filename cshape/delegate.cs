@@ -60,8 +60,6 @@ namespace shazi
 			 * 2024 1024 1024000 1024 1024
 			 */
 			Console.WriteLine("{0} {1} {2} {3} {4}", deal1(1000), deal2(1000), deal3(1000), deal4(1000), deals(1000));
-
-			Console.ReadKey();
 		}
 	}
 }

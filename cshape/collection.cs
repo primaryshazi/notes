@@ -18,8 +18,6 @@ namespace shazi
 			var queue = new Queue<int>();
 			var stack = new Stack<int>();
 			var bits = new BitArray(1024, false);
-
-			Console.ReadKey();
 		}
 	}
 }

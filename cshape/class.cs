@@ -118,8 +118,6 @@ namespace shazi
 		{
 			doPhone();
 			doCar();
-
-			Console.ReadKey();
 		}
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Reflection;
+using System.IO.Compression;
 
 namespace shazi
 {
@@ -13,10 +14,10 @@ namespace shazi
 		{
 			try
 			{
-				FileStream fs = new FileStream(FILE_NAME, FileMode.Create, FileAccess.Write);
+				// 作用域结束自动调用 fs.Dispose()释放所有资源
+				using FileStream fs = new(FILE_NAME, FileMode.Create, FileAccess.Write);
 				byte[] buffer = Encoding.UTF8.GetBytes(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 				fs.Write(buffer, 0, buffer.Length);
-				fs.Close();
 
 				return true;
 			}
@@ -36,17 +37,21 @@ namespace shazi
 		{
 			try
 			{
-				FileStream fs = new FileStream(FILE_NAME, FileMode.OpenOrCreate, FileAccess.Read);
+				using FileStream fs = new(FILE_NAME, FileMode.OpenOrCreate, FileAccess.Read);
+				using MemoryStream memoryStream = new MemoryStream();
+
 				while (fs.CanRead && fs.Position < fs.Length)
 				{
-					byte[] buffer = new Byte[128];
+					byte[] buffer = new byte[1];
 					if (fs.Read(buffer, 0, buffer.Length) <= 0)
 					{
 						break;
 					}
-					Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod().Name, Encoding.UTF8.GetString(buffer));
+
+					memoryStream.Write(buffer, 0, buffer.Length);
 				}
-				fs.Close();
+
+				Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod()?.Name, Encoding.UTF8.GetString(memoryStream.ToArray()));
 
 				return true;
 			}
@@ -66,9 +71,8 @@ namespace shazi
 		{
 			try
 			{
-				StreamWriter sw = new StreamWriter(FILE_NAME);
+				using StreamWriter sw = new(FILE_NAME);
 				sw.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				sw.Close();
 
 				return true;
 			}
@@ -88,27 +92,31 @@ namespace shazi
 		{
 			try
 			{
-				StreamReader sr = new StreamReader(FILE_NAME);
+				using StreamReader sr = new StreamReader(FILE_NAME);
+				string total = "";
+
 				while (!sr.EndOfStream)
 				{
-					string line = sr.ReadLine();
+					string line = sr.ReadLine() ?? "";
 					if (line == null)
 					{
 						break;
 					}
-					Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod().Name, line);
+
+					total += line;
 				}
-				sr.Close();
+
+				Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod()?.Name, total);
 
 				return true;
 			}
 			catch (IOException ex)
 			{
-				Console.WriteLine("io exception: {}", ex);
+				Console.WriteLine("io exception: {0}", ex);
 			}
 			catch (SystemException ex)
 			{
-				Console.WriteLine("unknown exception: {}", ex);
+				Console.WriteLine("unknown exception: {0}", ex);
 			}
 
 			return false;
@@ -118,19 +126,18 @@ namespace shazi
 		{
 			try
 			{
-				BinaryWriter br = new BinaryWriter(new FileStream(FILE_NAME, FileMode.Create, FileAccess.Write));
+				using BinaryWriter br = new(new FileStream(FILE_NAME, FileMode.Create, FileAccess.Write));
 				br.Write(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				br.Close();
 
 				return true;
 			}
 			catch (IOException ex)
 			{
-				Console.WriteLine("io exception: {}", ex);
+				Console.WriteLine("io exception: {0}", ex);
 			}
 			catch (SystemException ex)
 			{
-				Console.WriteLine("unknown exception: {}", ex);
+				Console.WriteLine("unknown exception: {0}", ex);
 			}
 
 			return false;
@@ -140,7 +147,9 @@ namespace shazi
 		{
 			try
 			{
-				BinaryReader br = new BinaryReader(new FileStream(FILE_NAME, FileMode.OpenOrCreate, FileAccess.Read));
+				using BinaryReader br = new(new FileStream(FILE_NAME, FileMode.OpenOrCreate, FileAccess.Read));
+				string total = "";
+
 				while (br.PeekChar() >= 0)
 				{
 					string line = br.ReadString();
@@ -148,19 +157,21 @@ namespace shazi
 					{
 						break;
 					}
-					Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod().Name, line);
+
+					total += line;
 				}
-				br.Close();
+
+				Console.WriteLine("{0}: {1}", MethodBase.GetCurrentMethod()?.Name, total);
 
 				return true;
 			}
 			catch (IOException ex)
 			{
-				Console.WriteLine("io exception: {}", ex);
+				Console.WriteLine("io exception: {0}", ex);
 			}
 			catch (SystemException ex)
 			{
-				Console.WriteLine("unknown exception: {}", ex);
+				Console.WriteLine("unknown exception: {0}", ex);
 			}
 
 			return false;
@@ -171,7 +182,13 @@ namespace shazi
 	{
 		static void Main(string[] args)
 		{
-			FileOperator oper = new FileOperator();
+			FileOperator oper = new();
+
+			/**
+             * readFileByFileSteam: 2024-11-28 19:19:01.591
+             * readFileBySteam: 2024-11-28 19:19:01.626
+             * readFileByBinary: 2024-11-28 19:19:01.627
+             */
 
 			oper.writeFileByFileSteam();
 			oper.readFileByFileSteam();
@@ -181,8 +198,6 @@ namespace shazi
 
 			oper.writeFileByBinary();
 			oper.readFileByBinary();
-
-			Console.ReadKey();
 		}
 	}
 }

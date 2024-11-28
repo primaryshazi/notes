@@ -1,40 +1,42 @@
 using System;
 
-namespace shazi {
-    interface IDoSomething {
-		void execSomething();
-}
-
-interface IDoNothing: IDoSomething
+namespace shazi
 {
-    void execNothing();
-}
-
-class ExecImplementer : IDoNothing
-{
-		public void execSomething()
+    interface IDoSomething
     {
-        Console.WriteLine("ExecImplementer execSomething");
+        void execSomething();
     }
 
-		public void execNothing()
+    interface IDoNothing : IDoSomething
     {
-        Console.WriteLine("ExecImplementer execNothing");
+        void execNothing();
     }
-}
 
-class MainApplication {
-    static void Main(string[] args) {
-        var dosomething = new ExecImplementer();
+    class ExecImplementer : IDoNothing
+    {
+        public void execSomething()
+        {
+            Console.WriteLine("ExecImplementer execSomething");
+        }
 
-        /**
-         * ExecImplementer execSomething
-         * ExecImplementer execNothing
-         */
-        dosomething.execSomething();
-        dosomething.execNothing();
-
-        Console.ReadKey();
+        public void execNothing()
+        {
+            Console.WriteLine("ExecImplementer execNothing");
+        }
     }
-}
+
+    class MainApplication
+    {
+        static void Main(string[] args)
+        {
+            var dosomething = new ExecImplementer();
+
+            /**
+             * ExecImplementer execSomething
+             * ExecImplementer execNothing
+             */
+            dosomething.execSomething();
+            dosomething.execNothing();
+        }
+    }
 }

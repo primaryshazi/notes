@@ -45,8 +45,6 @@ namespace shazi
 			 * bf shazi 987654321
 			 */
 			Console.WriteLine("{0} {1} {2}", bf.Uuid, bf.Nickname, bf.Exp);
-
-			Console.ReadKey();
 		}
 	}
 }

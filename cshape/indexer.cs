@@ -84,8 +84,6 @@ namespace shazi
 			{
 				Console.WriteLine("{0} {1}", i, nums[i]);
 			}
-
-			Console.ReadKey();
 		}
 	}
 }

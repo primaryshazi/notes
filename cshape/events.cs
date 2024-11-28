@@ -33,16 +33,24 @@ namespace shazi
 
 	class MainApplication
 	{
+		static void doSomethingA(string title)
+		{
+			Console.WriteLine("A got a news {0}", title);
+		}
+
 		static void Main(string[] args)
 		{
 			var news = new Newspaper();
 
-			news.subscribeNews(delegate (string title) { Console.WriteLine("A got a news {0}", title); });
+			news.subscribeNews(doSomethingA);
 			news.subscribeNews(delegate (string title) { Console.WriteLine("B got a news {0}", title); });
 
+			/**
+             * start publish news nothing
+             * A got a news nothing
+             * B got a news nothing
+             */
 			news.publishNews("nothing");
-
-			Console.ReadKey();
 		}
 	}
 }

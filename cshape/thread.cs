@@ -2,26 +2,27 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace shazi
 {
 	sealed class StoreManager
 	{
-		private static readonly Lazy<StoreManager> instance = new Lazy<StoreManager>(() => new StoreManager());
+		private static readonly Lazy<StoreManager> instance = new(() => new StoreManager());
 
-		private long status = 0;
-
-		private List<Thread> producerThreads = null;
-
-		private List<Thread> consumerThreads = null;
-
-		private ConcurrentQueue<int> queGoods = null;
+		private CancellationTokenSource? cts;
+		private List<Task> producerTasks;
+		private List<Task> consumerTasks;
+		private ConcurrentQueue<int> queGoods;
+		private Random rand;
 
 		private StoreManager()
 		{
-			producerThreads = new List<Thread>();
-			consumerThreads = new List<Thread>();
+			cts = null;
+			producerTasks = new List<Task>();
+			consumerTasks = new List<Task>();
 			queGoods = new ConcurrentQueue<int>();
+			rand = new Random();
 		}
 
 		public static StoreManager getInstance()
@@ -31,46 +32,26 @@ namespace shazi
 
 		public bool Start(int producer, int consumer)
 		{
+			this.Stop();
+			this.Wait();
+
 			producer = Math.Max(1, Math.Min(4, producer));
 			consumer = Math.Max(1, Math.Min(4, consumer));
 
-			if (IsStarted())
-			{
-				return false;
-			}
-			else
-			{
-				Wait();
-			}
+			cts = new CancellationTokenSource();
 
-			if (Interlocked.CompareExchange(ref status, 1, 0) == 1)
-			{
-				return false;
-			}
-
+			producerTasks = new List<Task>();
 			for (var i = 0; i < producer; i++)
 			{
-				var thr = new Thread(ProducerExec);
-				thr.Name = String.Format("[producer {0}]", i);
-				producerThreads.Add(thr);
+				var task = Task.Run(() => ProducerExec(cts.Token), cts.Token);
+				producerTasks.Add(task);
 			}
 
-			consumerThreads = new List<Thread>();
+			consumerTasks = new List<Task>();
 			for (var i = 0; i < consumer; i++)
 			{
-				var thr = new Thread(ConsumerExec);
-				thr.Name = String.Format("[consumer {0}]", i);
-				consumerThreads.Add(thr);
-			}
-
-			foreach (var thr in producerThreads)
-			{
-				thr.Start();
-			}
-
-			foreach (var thr in consumerThreads)
-			{
-				thr.Start();
+				var task = Task.Run(() => ConsumerExec(cts.Token), cts.Token);
+				consumerTasks.Add(task);
 			}
 
 			return true;
@@ -78,27 +59,25 @@ namespace shazi
 
 		public void Wait()
 		{
-			foreach (var thr in producerThreads)
+			if (producerTasks.Count > 0)
 			{
-				thr.Join();
+				Task.WaitAll(producerTasks.ToArray());
+				producerTasks.Clear();
 			}
-			producerThreads.Clear();
 
-			foreach (var thr in consumerThreads)
+			if (consumerTasks.Count > 0)
 			{
-				thr.Join();
+				Task.WaitAll(consumerTasks.ToArray());
+				consumerTasks.Clear();
 			}
-			consumerThreads.Clear();
+
+			cts = null;
 		}
 
 		public void Stop()
 		{
-			Interlocked.Exchange(ref status, 0);
-		}
-
-		public bool IsStarted()
-		{
-			return Interlocked.Read(ref status) > 0;
+			cts?.Cancel();
+			cts?.Dispose();
 		}
 
 		public bool IsEmpty()
@@ -106,57 +85,46 @@ namespace shazi
 			return queGoods.IsEmpty;
 		}
 
-		public bool IsFull()
-		{
-			return queGoods.Count >= 10000;
-		}
-
 		public void Clear()
 		{
-			var n = 0;
-			while (queGoods.TryDequeue(out n))
-			{
-			}
+			while (queGoods.TryDequeue(out _)) { }
 		}
 
-		private void ProducerExec()
+		private void ProducerExec(CancellationToken token)
 		{
-			Console.WriteLine("{0} start", Thread.CurrentThread.Name);
+			Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} start");
 
-			var n = 0;
-			Random rand = new Random();
-			while (IsStarted())
+			while (!token.IsCancellationRequested)
 			{
-				if (IsFull())
+				if (queGoods.Count >= 10000)
 				{
-					Console.WriteLine("{0} is full", Thread.CurrentThread.Name);
+					Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} is full");
 					Thread.Yield();
 				}
 				else
 				{
-					n = rand.Next(1, 10000);
+					int n = rand.Next(1, 10000);
 					queGoods.Enqueue(n);
 				}
 			}
 
-			Console.WriteLine("{0} end", Thread.CurrentThread.Name);
+			Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} end");
 		}
 
-		private void ConsumerExec()
+		private void ConsumerExec(CancellationToken token)
 		{
-			Console.WriteLine("{0} start", Thread.CurrentThread.Name);
+			Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} start");
 
-			var n = 0;
-			while (IsStarted())
+			while (!token.IsCancellationRequested)
 			{
-				if (!queGoods.TryDequeue(out n))
+				if (!queGoods.TryDequeue(out _))
 				{
-					Console.WriteLine("{0} is empty", Thread.CurrentThread.Name);
+					Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} is empty");
 					Thread.Yield();
 				}
 			}
 
-			Console.WriteLine("{0} end", Thread.CurrentThread.Name);
+			Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} end");
 		}
 	}
 
@@ -164,15 +132,13 @@ namespace shazi
 	{
 		static void Main(string[] args)
 		{
-			StoreManager.getInstance().Start(4, 4);
+			StoreManager.getInstance().Start(2, 1);
 
-			Thread.Sleep(5 * 1000);
+			Thread.Sleep(3 * 1000);
 			StoreManager.getInstance().Stop();
 
 			StoreManager.getInstance().Wait();
 			StoreManager.getInstance().Clear();
-
-			Console.ReadKey();
 		}
 	}
 }

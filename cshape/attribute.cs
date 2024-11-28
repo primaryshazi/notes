@@ -9,7 +9,7 @@ namespace shazi
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
 	class CustomAttribute : Attribute
 	{
-		public string str_tag { get; set; }
+		public required string str_tag { get; set; }
 	}
 
 	[Custom(str_tag = "CustomClass")]
@@ -49,7 +49,7 @@ namespace shazi
 				if (attr is CustomAttribute)
 				{
 					var cusAttr = attr as CustomAttribute;
-					Console.WriteLine("CustomAttribute: {0}", cusAttr.str_tag);
+					Console.WriteLine("CustomAttribute: {0}", cusAttr?.str_tag);
 				}
 			}
 		}
@@ -68,8 +68,6 @@ namespace shazi
 			cus.print1();
 			cus.print2();
 			cus.print3();
-
-			Console.ReadKey();
 		}
 	}
 }
