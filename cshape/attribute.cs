@@ -5,7 +5,12 @@ using System.Diagnostics;
 
 namespace shazi
 {
-	// 自定义属性
+	/**
+     * 自定义属性
+     * AttributeTargets: 指定目标: 确定属性可以应用到哪些程序元素上，例如类、方法、属性、字段等
+     * AllowMultiple : 指定属性是否可以在同一个程序元素上多次应用
+     * Inherited : 指定属性是否可以被继承到派生类
+     */
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
 	class CustomAttribute : Attribute
 	{
