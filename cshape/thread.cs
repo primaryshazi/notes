@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace shazi
 {
@@ -13,8 +9,8 @@ namespace shazi
 		private CancellationTokenSource? cts;
 		private List<Task> producerTasks;
 		private List<Task> consumerTasks;
-		private ConcurrentQueue<int> queGoods;
-		private Random rand;
+		private readonly ConcurrentQueue<int> queGoods;
+		private readonly Random rand;
 
 		private StoreManager()
 		{
@@ -32,8 +28,8 @@ namespace shazi
 
 		public bool Start(int producer, int consumer)
 		{
-			this.Stop();
-			this.Wait();
+			Stop();
+			Wait();
 
 			producer = Math.Max(1, Math.Min(4, producer));
 			consumer = Math.Max(1, Math.Min(4, consumer));
@@ -71,13 +67,13 @@ namespace shazi
 				consumerTasks.Clear();
 			}
 
+			cts?.Dispose();
 			cts = null;
 		}
 
 		public void Stop()
 		{
 			cts?.Cancel();
-			cts?.Dispose();
 		}
 
 		public bool IsEmpty()
