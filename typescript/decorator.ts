@@ -1,43 +1,33 @@
-const classDecorator: ClassDecorator = (target: any) => {
-    console.log(target.name)
+const classDecorator: ClassDecorator = (target: Object) => {
+    console.log(`classDecorator => target:${target.constructor.name}`)
 }
 
-const classDecorator2 = (str: string) => {
-    return (target: any) => {
-        console.log(target.name, str)
+const classDecoratorWithParamter = (str: string) => {
+    return (target: Object) => {
+        console.log(`classDecoratorWithParamter => target:${target.constructor.name} str:${str}`)
     };
 }
 
-const propertyDecorator: PropertyDecorator = (target: any, propertyName: string | symbol) => {
-    console.log(target.name, propertyName)
+const propertyDecorator: PropertyDecorator = (target: Object, propertyName: string | symbol) => {
+    console.log(`propertyDecorator => target:${target.constructor.name} propertyName:${propertyName?.toString()}`)
 }
 
-const methodDecorator: MethodDecorator = (target: any, methodName: string | symbol) => {
-    console.log(target.name, methodName)
+const methodDecorator: MethodDecorator = (target: Object, methodName: string | symbol, descriptor: PropertyDescriptor) => {
+    console.log(`methodDecorator => target:${target.constructor.name} methodName:${methodName?.toString()} descriptor:${descriptor}`)
 }
 
-const parameterDecorator: ParameterDecorator = (target: any, parameterName: string | symbol, parameterIndex: number) => {
-    console.log(target.name, parameterName, parameterIndex)
-}
-
-// 待修改
-const promiseConstructor = (target: any, propertyName: string, descriptor: PropertyDescriptor) => {
-    console.log(target.name, propertyName, descriptor)
+const parameterDecorator: ParameterDecorator = (target: Object, parameterName: string | symbol | undefined, parameterIndex: number) => {
+    console.log(`parameterDecorator => target:${target.constructor.name} parameterName:${parameterName?.toString()} parameterIndex:${parameterIndex}`)
 }
 
 @classDecorator
-@classDecorator2("ok")
+@classDecoratorWithParamter("ok")
 class Nothing {
-
-    @methodDecorator
-    do() {
-    }
-
     set(@parameterDecorator id: number) {
         this.id_ = id
     }
 
-    // @promiseConstructor
+    @methodDecorator
     get() {
         return this.id_
     }
@@ -45,3 +35,19 @@ class Nothing {
     @propertyDecorator
     private id_: number = 0
 }
+
+function main() {
+    /**
+     * => parameterDecorator => target:Nothing parameterName:set parameterIndex:0
+     * => methodDecorator => target:Nothing methodName:get descriptor:[object Object]
+     * => propertyDecorator => target:Nothing propertyName:id_
+     * => classDecoratorWithParamter => target:Nothing str:ok
+     * => classDecorator => target:Nothing
+     * => 1024
+     */
+    const nothing = new Nothing();
+    nothing.set(1024);
+    console.log(nothing.get());
+}
+
+main()
