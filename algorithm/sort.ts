@@ -52,31 +52,225 @@ function shellSort(arr: number[]) {
     }
 }
 
+// 堆排序是将数组看作一棵完全二叉树，将树调整为堆，然后依次将堆顶元素与末尾元素交换，再调整堆
 function heapSort(arr: number[]) {
+    const length = arr.length;
 
+    const buildHeap = (arr: number[], length: number, index: number): void => {
+        let father = index;
+        const left = 2 * index + 1;
+        const right = 2 * index + 2;
+
+        if (left < length && arr[left] > arr[father]) {
+            father = left;
+        }
+
+        if (right < length && arr[right] > arr[father]) {
+            father = right;
+        }
+
+        if (father !== index) {
+            [arr[index], arr[father]] = [arr[father], arr[index]];
+            buildHeap(arr, length, father);
+        }
+    };
+
+    for (let i = Math.floor(length / 2) - 1; i >= 0; i--) {
+        buildHeap(arr, length, i);
+    }
+
+    for (let i = length - 1; i >= 0; i--) {
+        [arr[0], arr[i]] = [arr[i], arr[0]];
+        buildHeap(arr, i, 0);
+    }
 }
 
-
+// 归并排序是将数组分成两部分，然后对两部分进行排序，最后将两部分合并
 function mergeSort(arr: number[]) {
+    const length = arr.length;
+    const tmpArr = new Array(length);
 
+    const merge = (arr: number[], left: number, mid: number, right: number): void => {
+        let i = left, j = mid + 1, k = 0;
+
+        while (i <= mid && j <= right) {
+            if (arr[i] <= arr[j]) {
+                tmpArr[k] = arr[i];
+                i++;
+            } else {
+                tmpArr[k] = arr[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= mid) {
+            tmpArr[k] = arr[i];
+            i++;
+            k++;
+        }
+
+        while (j <= right) {
+            tmpArr[k] = arr[j];
+            j++;
+            k++;
+        }
+
+        for (k = 0; left <= right;) {
+            arr[left] = tmpArr[k];
+            left++;
+            k++;
+        }
+    };
+
+    const mgSort = (arr: number[], left: number, right: number): void => {
+        if (left < right) {
+            const mid = left + ((right - left) >> 1);
+            mgSort(arr, left, mid);
+            mgSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    };
+
+    mgSort(arr, 0, length - 1);
 }
 
+// 快速排序是选择一个基准元素，将数组分成两部分，一部分比基准元素小，一部分比基准元素大，然后递归地对两部分进行排序
 function quickSort(arr: number[]) {
+    const length = arr.length;
 
+    const partition = (arr: number[], left: number, right: number): number => {
+        const random = Math.floor(Math.random() * (right - left + 1)) + left;
+        [arr[right], arr[random]] = [arr[random], arr[right]];
+
+        const standard = arr[right];
+        let index = left;
+
+        for (let i = left; i < right; i++) {
+            if (arr[i] < standard) {
+                [arr[i], arr[index]] = [arr[index], arr[i]];
+                index++;
+            }
+        }
+        [arr[index], arr[right]] = [arr[right], arr[index]];
+
+        return index;
+    };
+
+    const qcSort = (arr: number[], left: number, right: number): void => {
+        if (left < right) {
+            const index = partition(arr, left, right);
+            qcSort(arr, left, index - 1);
+            qcSort(arr, index + 1, right);
+        }
+    };
+
+    qcSort(arr, 0, length - 1);
 }
 
+// 计数排序是将数组中的元素作为键存储在额外开辟的数组空间中，然后依次将键值对中的元素放回原数组
 function countSort(arr: number[]) {
+    const length = arr.length;
+    if (length < 2) {
+        return;
+    }
 
+    let max = arr[0];
+    for (let i = 1; i < length; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+
+    const tmpArr = new Array(max + 1).fill(0);
+    for (const num of arr) {
+        tmpArr[num]++;
+    }
+
+    let index = 0;
+    for (let i = 0; i < tmpArr.length; i++) {
+        const count = tmpArr[i];
+        for (let j = 0; j < count; j++) {
+            arr[index] = i;
+            index++;
+        }
+    }
 }
 
+// 基数排序是根据元素的每一位进行排序，从低位到高位依次排序
 function radixSort(arr: number[]) {
+    const length = arr.length;
+    if (length < 2) {
+        return;
+    }
 
+    let max = arr[0];
+    for (let i = 1; i < length; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+
+    const digit = Math.floor(Math.log10(max)) + 1;
+    const radix: number[][] = Array.from({ length: 10 }, () => []);
+
+    for (let d = 0; d < digit; d++) {
+        for (const num of arr) {
+            const ratio = Math.pow(10, d);
+            const index = Math.floor(num / ratio) % 10;
+            radix[index].push(num);
+        }
+
+        let index = 0;
+        for (let i = 0; i < radix.length; i++) {
+            for (const num of radix[i]) {
+                arr[index] = num;
+                index++;
+            }
+            radix[i] = [];
+        }
+    }
 }
 
+// 桶排序是根据元素的值将元素分配到不同的桶中，然后对每个桶进行排序，最后将桶中的元素依次放回原数组
 function bucketSort(arr: number[]) {
+    const length = arr.length;
+    if (length < 2) {
+        return;
+    }
 
+    let max = arr[0];
+    let min = arr[0];
+    for (let i = 1; i < length; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        } else if (arr[i] < min) {
+            min = arr[i];
+        }
+    }
+
+    const bucketSize = Math.floor((max - min) / length) + 1;
+    const bucket: number[][] = Array.from({ length: bucketSize }, () => []);
+
+    for (const num of arr) {
+        const index = Math.floor((num - min) / length);
+        bucket[index].push(num);
+    }
+
+    for (let i = 0; i < bucket.length; i++) {
+        bucket[i].sort((a, b) => a - b);
+    }
+
+    let index = 0;
+    for (const b of bucket) {
+        for (const num of b) {
+            arr[index] = num;
+            index++;
+        }
+    }
 }
 
+// 标准排序
 function stdSort(arr: number[]) {
     arr.sort((a, b) => a - b);
 }
