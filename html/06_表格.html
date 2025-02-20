@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>表格</title>
+
+    <!-- 表格样式 -->
+    <style>
+        table {
+            border-collapse: collapse;
+            /* 合并边框 */
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 2px solid black;
+            /* 设置边框 */
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 水平表头 -->
+    <table>
+        <caption>表格的标题</caption>
+
+        <!-- 表格列分组 -->
+        <colgroup>
+            <col span="2" style="background-color:rgb(0, 238, 255)">
+            <col style="background-color:rgb(255, 123, 0)">
+        </colgroup>
+
+        <!-- 表头 -->
+        <thead>
+            <!-- 行 -->
+            <tr>
+                <!-- 表头内容 -->
+                <th>column 1</th>
+                <th>column 2</th>
+                <th>column 3</th>
+            </tr>
+        </thead>
+        <!-- 表体 -->
+        <tbody>
+            <tr>
+                <!-- 表格数据 -->
+                <td>(0, 0)</td>
+                <td>(0, 1)</td>
+                <td>(0, 2)</td>
+            </tr>
+            <tr>
+                <td>(1, 0)</td>
+                <td>(1, 1)</td>
+                <td>(1, 2)</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+
+    <!-- 垂直表头 -->
+    <table>
+        <tr>
+            <th>row 1</th>
+            <td>(0, 0)</td>
+            <td>(1, 0)</td>
+        </tr>
+        <tr>
+            <th>row 2</th>
+            <td>(0, 1)</td>
+            <td>(1, 1)</td>
+        </tr>
+        <tr>
+            <th>row 3</th>
+            <td>(0, 2)</td>
+            <td>(1, 2)</td>
+        </tr>
+    </table>
+    <br />
+
+    <!-- 横跨单元格 -->
+    <table>
+        <!-- 表头 -->
+        <thead>
+            <!-- 行 -->
+            <tr>
+                <!-- 表头内容 -->
+                <th>column 1</th>
+                <th colspan="2">column 2-3</th>
+            </tr>
+        </thead>
+        <!-- 表体 -->
+        <tbody>
+            <tr>
+                <!-- 表格数据 -->
+                <td>(0, 0)</td>
+                <td>(0, 1)</td>
+                <td>(0, 2)</td>
+            </tr>
+            <tr>
+                <td>(1, 0)</td>
+                <td>(1, 1)</td>
+                <td>(1, 2)</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+
+    <!-- 纵跨单元格 -->
+    <table>
+        <tr>
+            <th>row 1</th>
+            <td>(0, 0)</td>
+            <td>(1, 0)</td>
+        </tr>
+        <tr>
+            <th rowspan="2">row 2-3</th>
+            <td>(0, 1)</td>
+            <td>(1, 1)</td>
+        </tr>
+        <tr>
+            <td>(0, 2)</td>
+            <td>(1, 2)</td>
+        </tr>
+    </table>
+    <br />
+
+    <!-- 表格套元素 -->
+    <table>
+        <tr>
+            <th>c</th>
+            <th>c++</th>
+            <th>c sharp</th>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://www.runoob.com/cprogramming/c-tutorial.html" target="_blank">c 教程</a>
+            </td>
+            <td>
+                <a href="https://www.runoob.com/cplusplus/cpp-tutorial.html" target="_blank">c++ 教程</a>
+            </td>
+            <td>
+                <a href="https://www.runoob.com/csharp/csharp-tutorial.html" target="_blank">c sharp 教程</a>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
