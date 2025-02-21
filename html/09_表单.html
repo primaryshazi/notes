@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>表单</title>
+</head>
+
+<body>
+    <!-- action: 指定表单数据提交到的位置-->
+    <!-- method: 指定表单数据提交的方式-->
+    <form action="" method="post">
+        <label for="name">name:</label>
+        <!-- id: 指定该输入框的唯一标识-->
+        <!-- type: 指定该输入框的类型-->
+        <!-- name: 指定该输入框的名称-->
+        <!-- required: 指定该输入框为必填项-->
+        <input type="text" id="name" name="entertext" required>
+        <br>
+
+        <!-- 密码输入框-->
+        <label for="password">password:</label>
+        <input type="password" id="password" name="enterpassword" required>
+        <br>
+
+        <!-- 单选按钮-->
+        <label>性别:</label>
+        <input type="radio" id="male" name="gender" value="male" checked>
+        <label for="male">男</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">女</label>
+        <br>
+
+        <!-- 复选框 -->
+        <input type="checkbox" id="start" name="start" checked>
+        <label form="start">开机启动</label>
+        <input type="checkbox" id="email" name="email" checked>
+        <label form="email">邮件提醒</label>
+        <br>
+
+        <!-- 下拉列表 -->
+        <label for="city">城市:</label>
+        <select id="city" name="city">
+            <option value="beijing">北京</option>
+            <option value="shanghai">上海</option>
+            <option value="guangzhou">广州</option>
+        </select>
+        <br>
+
+        <!-- 下拉列表分组 -->
+        <label for="place">地址:</label>
+        <select id="place" name="place">
+            <optgroup label="山东">
+                <option value="jinan">济南</option>
+                <option value="zibo">淄博</option>
+            </optgroup>
+            <optgroup label="陕西">
+                <option value="wuhan">西安</option>
+                <option value="yanan">延安</option>
+            </optgroup>
+        </select>
+        <br>
+
+        <!-- 提交按钮 -->
+        <input type="submit" value="提交">
+        <br>
+
+        <!-- 文本框 -->
+        <textarea rows="10" cols="30">please enter some word.</textarea>
+        <br>
+
+        <!-- 分组 -->
+        <fieldset>
+            <legend>一组元素</legend>
+            <input type="datetime-local" value="2025-02-21T15:38:21">
+        </fieldset>
+        <br>
+
+        <!-- 按钮 -->
+        <button type="button">按钮</button>
+        <br>
+
+        <!-- 预输入列表 -->
+        <input list="browsers" name="browser" value="Chrome">
+        <datalist id="browsers">
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
+        </datalist>
+        <br>
+    </form>
+
+    <!-- 输出 -->
+    <form>
+        <input type="range" id="a" name="a" value="100" min="0" max="100" oninput="updateLabels()">
+        <br>
+        <input type="range" id="b" name="b" value="200" min="0" max="200" oninput="updateLabels()">
+        <br>
+        <label id="ra">100</label> +
+        <label id="rb">200</label> =
+        <output name="x" for="a b">300</output>
+        <br>
+        <script>
+            function updateLabels() {
+                // 获取输入框
+                const a = document.getElementById('a');
+                const b = document.getElementById('b');
+                // 获取标签
+                const labelA = document.getElementById('ra');
+                const labelB = document.getElementById('rb');
+                // 获取输出
+                const output = document.querySelector('output[name="x"]');
+
+                labelA.textContent = a.value;
+                labelB.textContent = b.value;
+                output.value = parseInt(a.value) + parseInt(b.value);
+            }
+
+            updateLabels();
+        </script>
+    </form>
+
+</body>
+
+</html>
