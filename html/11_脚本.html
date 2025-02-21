@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>脚本</title>
+</head>
+
+<body>
+    <label id="lb">00:00:00</label>
+    <br>
+
+    <button type="button" id="btn" onclick="dealTime()">开始</button>
+
+    <script>
+        let timerID = -1;
+
+        function time2str(ms, format = "%Y-%M-%D %h:%m:%s") {
+            if (format.length === 0) {
+                return "";
+            }
+
+            const date = new Date(ms);
+
+            const components = {
+                "Y": { str: date.getFullYear().toString(), length: 4 },
+                "M": { str: (date.getMonth() + 1).toString(), length: 2 },
+                "D": { str: date.getDate().toString(), length: 2 },
+                "h": { str: date.getHours().toString(), length: 2 },
+                "m": { str: date.getMinutes().toString(), length: 2 },
+                "s": { str: date.getSeconds().toString(), length: 2 },
+                "z": { str: date.getMilliseconds().toString(), length: 3 }
+            };
+
+            let result = "";
+            let i = 0;
+
+            while (i < format.length) {
+                if (format[i] === '%' && i + 1 < format.length) {
+                    let ch = format[i + 1];
+                    switch (ch) {
+                        case 'Y':
+                        case 'M':
+                        case 'D':
+                        case 'h':
+                        case 'm':
+                        case 's':
+                        case 'z': {
+                            const value = components[ch];
+                            result += `${value.str}`.padStart(value.length, "0");
+                            i += 2;
+                            break;
+                        }
+                        default: {
+                            result += format[i];
+                            i++;
+                            break;
+                        }
+                    }
+                } else {
+                    result += format[i];
+                    i++;
+                }
+            }
+
+            return result;
+        }
+
+        function dealTime() {
+            if (timerID < 0 && timerID !== -1) {
+                startTime();
+            } else {
+                stopTime();
+            }
+        }
+
+        function startTime() {
+            timerID = setInterval(() => {
+                let lb = document.getElementById("lb");
+                let btn = document.getElementById("btn")
+
+                lb.innerText = time2str(Date.now());
+                btn.innerText = "暂停";
+            }, 100);
+        }
+
+        function stopTime() {
+            let lb = document.getElementById("lb");
+            let btn = document.getElementById("btn")
+
+            lb.innerText = "00:00:00"
+            btn.innerText = "开始";
+
+            clearInterval(timerID);
+            timerID = -999;
+        }
+
+        window.onload = function () {
+            dealTime();
+        }
+    </script>
+
+    <!-- 使用外部脚本 -->
+    <script src="script.js"></script>
+</body>
+
+</html>
