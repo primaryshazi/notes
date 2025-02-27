@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>拖放</title>
+
+    <style type="text/css">
+        #div1 {
+            width: 300px;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function allowDrop(ev) {
+            // 阻止默认行为
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            // 记录拖动对象的ID
+            ev.dataTransfer.setData("Wind", ev.target.id);
+        }
+
+        function drop(ev) {
+            // 阻止默认行为
+            ev.preventDefault();
+
+            // 获取拖动的对象的ID
+            let targetID = ev.dataTransfer.getData("Wind");
+            // 获取拖动的对象
+            let target = document.getElementById(targetID);
+
+            // 确保目标容器有相对定位，以便绝对定位的子元素相对于它定位
+            ev.target.style.position = "relative";
+
+            // 将拖动的对象添加到目标容器中
+            ev.target.appendChild(target);
+
+            // 设置拖动对象的定位方式为绝对定位
+            target.style.position = "absolute";
+
+            // 计算目标容器的中心位置
+            let containerWidth = ev.target.offsetWidth;
+            let containerHeight = ev.target.offsetHeight;
+            let targetWidth = target.offsetWidth;
+            let targetHeight = target.offsetHeight;
+
+            // 计算使target居中的left和top值
+            let centerX = (containerWidth - targetWidth) / 2;
+            let centerY = (containerHeight - targetHeight) / 2;
+
+            // 设置拖动对象的位置为目标容器的中心
+            target.style.left = centerX + "px";
+            target.style.top = centerY + "px";
+            target.style.margin = "0";      // 清除可能影响定位的margin
+        }
+    </script>
+</head>
+
+<body>
+    <p>拖动图片到矩形框中:</p>
+
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <br>
+    <img id="drag1" src="./img/1.png" draggable="true" ondragstart="drag(event)" width="100" height="100">
+</body>
+
+</html>
