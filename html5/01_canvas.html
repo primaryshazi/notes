@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Canvas</title>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="400" height="300" style="border:1px solid #000000;"></canvas>
+
+    <script>
+        let canvas = document.getElementById('myCanvas');
+        let ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = 'blue';
+        ctx.strokeStyle = 'red';
+
+        // 绘制空心矩形
+        ctx.beginPath();
+        ctx.rect(0, 0, 100, 100);
+        ctx.stroke();
+
+        // 绘制实心圆形
+        ctx.beginPath();
+        ctx.arc(150, 50, 50, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 绘制对角线
+        ctx.beginPath();
+        ctx.moveTo(0, 300);
+        ctx.lineTo(400, 0);
+        ctx.stroke();
+
+        // 绘制空心文字
+        ctx.font = '30px Arial';
+        ctx.strokeText('Hello, World!', 200, 30);
+
+        // 绘制实心文字
+        ctx.font = '30px Arial';
+        ctx.fillText('Hello, World!', 200, 70);
+
+        // 绘制线性渐变，从(0,0)到(200,0)
+        let graLinear = ctx.createLinearGradient(0, 50, 200, 0);
+        graLinear.addColorStop(0, 'red');
+        graLinear.addColorStop(1, 'blue');
+        ctx.fillStyle = graLinear;
+        ctx.fillRect(0, 100, 200, 100);
+
+        // 绘制径向渐变，从(200,0)到(300,0)
+        let graRadial = ctx.createRadialGradient(100, 250, 5, 100, 250, 100);
+        graRadial.addColorStop(0, 'red');
+        graRadial.addColorStop(1, 'blue');
+        ctx.fillStyle = graRadial;
+        ctx.fillRect(0, 200, 200, 100);
+
+        // 绘制图像
+        let img = new Image();
+        img.src = "./img/1.png";
+        img.onload = function () {
+            ctx.drawImage(img, 200, 200, 100, 100);
+        }
+    </script>
+</body>
+
+</html>
