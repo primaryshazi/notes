@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>视频</title>
+</head>
+
+<body>
+    <div style="text-align: center;">
+        <video id="myvideo" width="480" height="270" controls>
+            <source src="./video/1.mp4" type="video/mp4">
+        </video>
+
+        <br>
+
+        <button id="playButton" onclick="playVideo()">播放/暂停</button>
+    </div>
+
+    <script>
+        var video = document.getElementById("myvideo");
+        var playButton = document.getElementById("playButton");
+
+        function playVideo() {
+            if (video.paused) {
+                video.play();
+
+                playButton.innerHTML = "暂停";
+            } else {
+                video.pause();
+
+                playButton.innerHTML = "播放";
+            }
+        }
+    </script>
+</body>
+
+</html>
